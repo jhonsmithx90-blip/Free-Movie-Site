@@ -11,6 +11,7 @@
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -117,7 +118,7 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--body-font), 'Helvetica Neue', Helvetica, Arial, sans-serif; transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease; }
         
-        body { background-color: var(--bg-color); background-image: var(--body-bg-image); background-size: cover; background-attachment: fixed; color: var(--text-color); margin: 0; -webkit-font-smoothing: antialiased; overflow: hidden; }
+        body { background-color: var(--bg-color); background-image: var(--body-bg-image); background-size: cover; background-attachment: fixed; color: var(--text-color); margin: 0; overflow: hidden; -webkit-font-smoothing: antialiased; }
 
         #page-container {
             position: relative;
@@ -158,10 +159,8 @@
             z-index: 1;
         }
 
-        /* =========================== */
-        /* NEW: WELCOME SCREEN STYLES */
-        /* =========================== */
-        .welcome-page {
+        /* --- LOGIN/SIGNUP STYLES --- */
+        .auth-page {
             position: fixed;
             top: 0;
             left: 0;
@@ -169,80 +168,184 @@
             height: 100%;
             background-color: var(--bg-color);
             z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            overflow-y: auto;
+            display: none;
         }
 
-        .welcome-container {
+        .auth-container {
             width: 100%;
             max-width: 400px;
+            margin: 0 auto;
+            padding: 30px 20px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            text-align: center;
+            min-height: 100vh;
+            justify-content: center;
         }
 
-        .welcome-logo {
-            font-size: 48px;
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .auth-logo .logo {
+            font-size: 42px;
             font-weight: bold;
             color: var(--text-color);
             font-style: italic;
-            margin-bottom: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            margin-bottom: 10px;
         }
 
-        .welcome-logo .fa-film {
+        .auth-logo .logo .fa-film {
             color: var(--primary-color);
+            margin-left: 5px;
         }
 
-        .welcome-title {
-            font-size: 24px;
+        .auth-title {
+            font-size: 28px;
             font-weight: bold;
+            text-align: center;
             margin-bottom: 30px;
             color: var(--text-color);
         }
 
-        .welcome-input-container {
-            width: 100%;
-            margin-bottom: 25px;
-        }
-
-        .welcome-input {
-            width: 100%;
-            padding: 16px 20px;
-            background-color: var(--card-bg);
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            color: var(--text-color);
+        .auth-subtitle {
             font-size: 16px;
             text-align: center;
+            color: var(--secondary-text-color);
+            margin-bottom: 40px;
+        }
+
+        .auth-form {
+            width: 100%;
+        }
+
+        .auth-form-group {
+            margin-bottom: 20px;
+        }
+
+        .auth-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--secondary-text-color);
+            font-weight: 500;
+        }
+
+        .auth-input-container {
+            position: relative;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 15px 20px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-color);
+            font-size: 16px;
             transition: all 0.3s;
         }
 
-        .welcome-input:focus {
+        .auth-input:focus {
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(0, 170, 255, 0.1);
         }
 
-        .welcome-input::placeholder {
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
             color: var(--secondary-text-color);
+            cursor: pointer;
+            font-size: 18px;
         }
 
-        .welcome-button {
+        .forgot-password {
+            text-align: right;
+            margin-top: 5px;
+            margin-bottom: 30px;
+        }
+
+        .forgot-password a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .auth-button {
             width: 100%;
             padding: 16px;
             background-color: var(--primary-color);
             color: var(--bg-color);
             border: none;
-            border-radius: 12px;
-            font-size: 18px;
+            border-radius: 10px;
+            font-size: 16px;
             font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 25px;
+        }
+
+        .auth-button:hover {
+            background-color: var(--primary-color-hover);
+            transform: translateY(-2px);
+        }
+
+        .auth-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--secondary-text-color);
+            font-size: 15px;
+        }
+
+        .auth-switch a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            margin: 30px 0;
+            color: var(--secondary-text-color);
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background-color: var(--border-color);
+        }
+
+        .auth-divider span {
+            padding: 0 15px;
+            font-size: 14px;
+        }
+
+        .google-auth-button {
+            width: 100%;
+            padding: 16px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.3s;
             display: flex;
@@ -251,22 +354,31 @@
             gap: 10px;
         }
 
-        .welcome-button:hover {
-            background-color: var(--primary-color-hover);
-            transform: translateY(-2px);
+        .google-auth-button:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: var(--primary-color);
         }
 
-        .welcome-button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .welcome-note {
-            margin-top: 20px;
-            color: var(--secondary-text-color);
+        .auth-error {
+            background-color: rgba(229, 9, 20, 0.1);
+            border: 1px solid rgba(229, 9, 20, 0.3);
+            color: #ff6b6b;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
             font-size: 14px;
-            line-height: 1.5;
+            display: none;
+        }
+
+        .auth-success {
+            background-color: rgba(0, 170, 255, 0.1);
+            border: 1px solid rgba(0, 170, 255, 0.3);
+            color: var(--primary-color);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
         }
 
         .loading-spinner {
@@ -378,7 +490,7 @@
         }
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 1100; display: none; justify-content: center; align-items: center; padding: 15px; }
-        .modal-content { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; width: 100%; max-width: 450px; max-height: 90vh; display: flex; flex-direction: column; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow-y: auto; }
+        .modal-content { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; width: 100%; max-width: 450px; max-height: 90vh; display: flex; flex-direction: column; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow-y: auto; } /* FIXED: Added overflow-y */
         .modal-close { position: absolute; top: 10px; right: 10px; background: var(--primary-color); color: var(--bg-color); border: none; width: 30px; height: 30px; border-radius: 50%; font-size: 20px; cursor: pointer; line-height: 30px; text-align: center; }
         
         .btn { background-color: var(--primary-color); color: var(--bg-color); border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; flex: 1; display: flex; justify-content: center; align-items: center; gap: 8px; transition: all 0.3s; box-shadow: 0 4px 8px rgba(0, 170, 255, 0.3); } 
@@ -392,7 +504,7 @@
         .category-section { margin-bottom: 35px; } 
         .category-title { font-size: 20px; font-weight: bold; color: var(--text-color); position: relative; padding-left: 15px; } 
         .category-title::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 5px; height: 20px; background-color: var(--primary-color); border-radius: 3px; } 
-        .content-slider { display: flex; overflow-x: auto; padding: 20px 15px; scrollbar-width: none; gap: 12px; }
+        .content-slider { display: flex; overflow-x: auto; padding: 20px 15px; scrollbar-width: none; gap: 12px; } /* FIXED: Added left-right padding */
         .content-slider::-webkit-scrollbar { display: none; } 
         .content-card { flex: 0 0 calc(33.33% - 8px); position: relative; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px var(--shadow-color); transition: all 0.3s; cursor: pointer; background: var(--card-bg); } 
         .content-card:hover { transform: scale(1.05); } 
@@ -408,8 +520,8 @@
         .detail-storyline { color: var(--text-color); } 
         .episode-item, .comment-item { background-color: var(--card-bg); border-radius: 10px; padding: 12px; margin-bottom: 12px; border: 1px solid var(--border-color); } 
         
-        .slider-container { position: relative; width: calc(100% - 30px); height: 220px; overflow: hidden; margin-bottom: 25px; border-radius: 15px; margin: 15px; }
-        .slider { display: flex; transition: transform 0.5s ease; height: 100%; cursor: pointer; }
+        .slider-container { position: relative; width: calc(100% - 30px); height: 220px; overflow: hidden; margin-bottom: 25px; border-radius: 15px; margin: 15px; } /* FIXED: Added width calculation for equal padding */
+        .slider { display: flex; transition: transform 0.5s ease; height: 100%; cursor: pointer; } /* FIXED: Added cursor pointer */
         .slide { min-width: 100%; height: 100%; position: relative; } 
         .slide img { width: 100%; height: 100%; object-fit: cover; } 
         .slide-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 20px; } 
@@ -419,7 +531,7 @@
         .slider-indicators { position: absolute; bottom: 15px; right: 15px; display: flex; gap: 8px; } 
         .indicator { width: 8px; height: 8px; border-radius: 50%; background-color: rgba(255,255,255,0.5); cursor: pointer; transition: all 0.3s; } 
         .indicator.active { background-color: var(--primary-color); transform: scale(1.2); } 
-        .category-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 15px; }
+        .category-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 15px; } /* FIXED: Added padding */
         .see-all { color: var(--primary-color); font-size: 14px; text-decoration: none; font-weight: bold; } 
         .see-all i { margin-left: 4px; font-size: 12px; } 
         .content-title { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 30px 10px 10px; font-size: 13px; font-weight: bold; text-align: center; } 
@@ -449,7 +561,7 @@
             backdrop-filter: blur(2px);
         }
 
-        /* VIDEO PLAYER */
+        /* FIXED: VIDEO PLAYER with proper flex layout */
         .video-player, .cast-full-view { 
             position: fixed; 
             top: 0; 
@@ -480,7 +592,7 @@
             background-color: #000;
         }
         
-        /* FLOATING AD SLOTS */
+        /* FIXED: Floating Ad Slots with proper styling */
         .floating-ad-slot {
             flex: 0 0 auto;
             overflow: hidden;
@@ -494,12 +606,14 @@
             justify-content: center;
         }
         
+        /* Fix for ad network scripts that add position: fixed */
         .floating-ad-slot * {
             position: static !important;
             margin: 0 auto !important;
             max-width: 100% !important;
         }
         
+        /* Hide empty ad slots */
         .floating-ad-slot:empty {
             display: none;
         }
@@ -531,7 +645,7 @@
         .video-download { display: none; }
         .back-btn { position: fixed; background: rgba(0,0,0,0.7); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer; top: 15px; left: 15px; display: none; z-index: 1001; }
         
-        /* BOTTOM NAVIGATION */
+        /* UPDATED: Bottom Navigation with 5 items */
         .bottom-nav { 
             position: fixed; 
             bottom: 0; 
@@ -574,7 +688,7 @@
             transform: translateY(-2px);
         }
 
-        /* AD OVERLAY STYLES */
+        /* --- AD OVERLAY STYLES --- */
         #ad-overlay {
             position: fixed;
             top: 0;
@@ -652,7 +766,7 @@
             z-index: 1;
         }
 
-        /* SERVER MAINTENANCE POPUP */
+        /* --- SERVER MAINTENANCE POPUP STYLES --- */
         #server-maintenance-overlay {
             z-index: 99999;
             background-color: rgba(0,0,0,0.95);
@@ -674,7 +788,7 @@
             margin-bottom: 25px;
         }
         
-        /* APP LOCK STYLES */
+        /* --- APP LOCK STYLES --- */
         #app-lock-overlay {
             position: fixed;
             top: 0;
@@ -745,7 +859,7 @@
             40%, 60% { transform: translate3d(4px, 0, 0); }
         }
 
-        /* Subscription Page Styles */
+        /* UPDATED: Subscription Page Styles - Cleaner Design */
         .subscription-page-container { 
             padding: 0 15px 20px; 
             display: flex; 
@@ -846,7 +960,7 @@
             color: var(--primary-color);
         }
 
-        /* Checkout Modal */
+        /* UPDATED: Checkout Modal - Fixed Scroll Issue */
         #checkout-modal .modal-content {
             max-width: 400px;
             max-height: 85vh;
@@ -946,7 +1060,7 @@
             margin-bottom: 10px;
         }
 
-        /* 3D ID CARD STYLES */
+        /* --- 3D ID CARD STYLES --- */
         .id-card-wrapper {
             width: 100%;
             height: 220px;
@@ -1091,14 +1205,14 @@
             50% { opacity: 0.3; }
         }
 
-        /* DISCLAIMER OVERLAY */
+        /* --- DISCLAIMER OVERLAY --- */
         #disclaimer-overlay { z-index: 2001; background-color: rgba(0,0,0,0.9); backdrop-filter: blur(5px); display: none; }
         #disclaimer-content { max-width: 380px; text-align: center; padding: 25px; }
         #disclaimer-content h2 { color: var(--primary-color); margin-bottom: 15px; }
         #disclaimer-content p { font-size: 14px; line-height: 1.6; color: var(--secondary-text-color); margin-bottom: 25px; }
         #enter-btn { width: 100%; }
 
-        /* Poll Styles */
+        /* UPDATED: Poll Styles - Fixed Closing */
         #poll-popup { 
             position: fixed; 
             bottom: 75px; 
@@ -1112,7 +1226,7 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.4); 
             z-index: 1050; 
             overflow: hidden; 
-            display: none;
+            display: none; /* Hidden by default */
         }
         
         #poll-popup.show {
@@ -1196,18 +1310,18 @@
             margin-top: 15px; 
         }
 
-        /* LIVE TV STYLES */
+        /* --- LIVE TV STYLES --- */
         .livetv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; padding: 0 15px; }
         .livetv-card { background-color: var(--card-bg); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 1px solid var(--border-color); }
         .livetv-card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px var(--shadow-color); border-color: var(--primary-color); }
         .livetv-card img { width: 80%; max-width: 80px; height: auto; margin-bottom: 10px; object-fit: contain; }
         .livetv-card-name { font-size: 12px; color: var(--text-color); text-align: center; font-weight: bold; }
 
-        /* CONTENT GRID */
+        /* --- CONTENT GRID --- */
         .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0 15px; }
         .placeholder-text { padding: 40px 15px; text-align: center; color: var(--secondary-text-color); }
 
-        /* FLOATING COMPLAINT ICON */
+        /* --- FLOATING COMPLAINT ICON --- */
         #complaint-fab {
             position: fixed;
             bottom: 85px;
@@ -1237,7 +1351,7 @@
             100% { box-shadow: 0 0 0 0 rgba(0, 170, 255, 0); }
         }
         
-        /* Movies Page Styles */
+        /* NEW: Movies Page Styles */
         #movies-page .category-section {
             margin-bottom: 25px;
         }
@@ -1281,7 +1395,7 @@
             font-size: 16px;
         }
         
-        /* Theme Preview Cards */
+        /* NEW: Theme Preview Cards */
         .theme-preview-card {
             background-color: var(--card-bg);
             border-radius: 10px;
@@ -1332,7 +1446,7 @@
             font-size: 14px;
         }
 
-        /* Movies Page State Styles */
+        /* UPDATED: Movies Page State Styles */
         .state-container {
             padding: 40px 20px;
             text-align: center;
@@ -1375,7 +1489,7 @@
             transform: translateY(-2px);
         }
 
-        /* Notifications Page Styles */
+        /* NEW: Notifications Page Styles */
         .notifications-list {
             padding: 15px;
         }
@@ -1424,7 +1538,7 @@
             font-size: 12px;
         }
 
-        /* Toast Notification */
+        /* NEW: Toast Notification */
         .toast-notification {
             position: fixed;
             top: 80px;
@@ -1468,7 +1582,10 @@
             font-size: 20px;
         }
         
-        /* Action Links Styles */
+        /* =========================== */
+        /* NEW: Action Links Styles */
+        /* =========================== */
+        
         .main-description-section {
             padding: 20px 15px 0;
             margin-bottom: 20px;
@@ -1613,7 +1730,7 @@
             margin: 20px 15px;
         }
         
-        /* Pagination Styles */
+        /* NEW: Pagination Styles */
         .pagination-container {
             display: flex;
             justify-content: center;
@@ -1674,32 +1791,149 @@
         <div class="loading-text">Loading...</div>
     </div>
 
-    <!-- =========================== -->
-    <!-- NEW: WELCOME SCREEN -->
-    <!-- =========================== -->
-    <div class="welcome-page" id="welcome-page">
-        <div class="welcome-container">
-            <div class="welcome-logo">
-                NH BOX<i class="fas fa-film"></i>
+    <!-- Login Screen -->
+    <div class="auth-page" id="login-page">
+        <div class="auth-container">
+            <div class="auth-logo">
+                <div class="logo" id="login-logo">NH BOX<i class="fas fa-film"></i></div>
+                <h1 class="auth-title">Login</h1>
+                <p class="auth-subtitle">Welcome back!</p>
             </div>
-            
-            <h2 class="welcome-title">Enter Your Name</h2>
-            
-            <div class="welcome-input-container">
-                <input type="text" 
-                       id="guest-name-input" 
-                       class="welcome-input" 
-                       placeholder="Enter your name" 
-                       maxlength="50"
-                       autocomplete="off">
+
+            <div class="auth-error" id="login-error"></div>
+            <div class="auth-success" id="login-success"></div>
+
+            <form class="auth-form" id="login-form" onsubmit="event.preventDefault(); handleEmailLogin();">
+                <div class="auth-form-group">
+                    <label for="login-email">Enter Your Username / Email</label>
+                    <div class="auth-input-container">
+                        <input type="text" id="login-email" class="auth-input" placeholder="username or email@example.com" required>
+                    </div>
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="login-password">Enter Your Password</label>
+                    <div class="auth-input-container">
+                        <input type="password" id="login-password" class="auth-input" placeholder="••••••••" required>
+                        <button type="button" class="password-toggle" id="login-password-toggle">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="forgot-password">
+                        <a href="#" onclick="showForgotPassword()">Forgot Password?</a>
+                    </div>
+                </div>
+
+                <button type="submit" class="auth-button" id="login-button">
+                    <span id="login-button-text">Login</span>
+                </button>
+            </form>
+
+            <div class="auth-switch">
+                Don't have an account? <a href="#" onclick="showSignup()">Signup</a>
             </div>
-            
-            <button class="welcome-button" onclick="handleGuestEntry()" id="continue-button">
-                <span id="continue-button-text">Continue</span>
+
+            <div class="auth-divider">
+                <span>Or</span>
+            </div>
+
+            <button class="google-auth-button" onclick="handleGoogleLogin()">
+                <i class="fab fa-google"></i>
+                Login with Google
             </button>
-            
-            <div class="welcome-note">
-                Enter your name to continue to the app. Your name will be stored locally.
+        </div>
+    </div>
+
+    <!-- Signup Screen -->
+    <div class="auth-page" id="signup-page">
+        <div class="auth-container">
+            <div class="auth-logo">
+                <div class="logo" id="signup-logo">NH BOX<i class="fas fa-film"></i></div>
+                <h1 class="auth-title">Signup</h1>
+            </div>
+
+            <div class="auth-error" id="signup-error"></div>
+            <div class="auth-success" id="signup-success"></div>
+
+            <form class="auth-form" id="signup-form" onsubmit="event.preventDefault(); handleSignup();">
+                <div class="auth-form-group">
+                    <label for="signup-username">Enter Your Username</label>
+                    <div class="auth-input-container">
+                        <input type="text" id="signup-username" class="auth-input" placeholder="username" required minlength="3">
+                    </div>
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="signup-email">Enter Your Email</label>
+                    <div class="auth-input-container">
+                        <input type="email" id="signup-email" class="auth-input" placeholder="email@example.com" required>
+                    </div>
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="signup-phone">Enter Your Phone Number</label>
+                    <div class="auth-input-container">
+                        <input type="tel" id="signup-phone" class="auth-input" placeholder="+1 234 567 8900">
+                    </div>
+                </div>
+
+                <div class="auth-form-group">
+                    <label for="signup-password">Enter Your Password</label>
+                    <div class="auth-input-container">
+                        <input type="password" id="signup-password" class="auth-input" placeholder="••••••••" required minlength="6">
+                        <button type="button" class="password-toggle" id="signup-password-toggle">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="auth-button" id="signup-button">
+                    <span id="signup-button-text">Signup</span>
+                </button>
+            </form>
+
+            <div class="auth-switch">
+                Already have an account? <a href="#" onclick="showLogin()">Login</a>
+            </div>
+
+            <div class="auth-divider">
+                <span>Or</span>
+            </div>
+
+            <button class="google-auth-button" onclick="handleGoogleLogin()">
+                <i class="fab fa-google"></i>
+                Login with Google
+            </button>
+        </div>
+    </div>
+
+    <!-- Forgot Password Screen -->
+    <div class="auth-page" id="forgot-password-page">
+        <div class="auth-container">
+            <div class="auth-logo">
+                <div class="logo">NH BOX<i class="fas fa-film"></i></div>
+                <h1 class="auth-title">Forgot Password</h1>
+                <p class="auth-subtitle">Enter your email to reset your password</p>
+            </div>
+
+            <div class="auth-error" id="forgot-error"></div>
+            <div class="auth-success" id="forgot-success"></div>
+
+            <form class="auth-form" id="forgot-form" onsubmit="event.preventDefault(); handleForgotPassword();">
+                <div class="auth-form-group">
+                    <label for="forgot-email">Enter Your Email</label>
+                    <div class="auth-input-container">
+                        <input type="email" id="forgot-email" class="auth-input" placeholder="email@example.com" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="auth-button" id="forgot-button">
+                    <span id="forgot-button-text">Send Reset Link</span>
+                </button>
+            </form>
+
+            <div class="auth-switch">
+                <a href="#" onclick="showLogin()">Back to Login</a>
             </div>
         </div>
     </div>
@@ -1750,7 +1984,7 @@
             </div>
         </div>
 
-        <!-- AD OVERLAY -->
+        <!-- UPDATED: AD OVERLAY - Now with real ad player -->
         <div id="ad-overlay">
             <div class="ad-container">
                 <div class="ad-header">
@@ -1762,7 +1996,7 @@
             </div>
         </div>
 
-        <!-- VIDEO PLAYER -->
+        <!-- FIXED: VIDEO PLAYER with proper flex layout -->
         <div class="video-player" id="video-player">
             <div class="video-controls">
                 <button class="video-close" onclick="closeVideoPlayer()"><i class="fas fa-times"></i></button>
@@ -1815,7 +2049,7 @@
                 </div>
             </div>
 
-            <!-- MOVIES PAGE -->
+            <!-- NEW: MOVIES PAGE -->
             <div id="movies-page" class="page">
                 <div class="header">
                     <div class="logo-container">
@@ -1874,7 +2108,7 @@
                         <div class="id-card-hologram"></div>
                         <div class="id-card-header">
                             <div class="logo">NH BOX</div>
-                            <span id="profile-member-type">GUEST MEMBER</span>
+                            <span id="profile-member-type">FREE MEMBER</span>
                         </div>
                         <div class="id-card-content">
                             <div class="id-card-photo-wrapper">
@@ -1887,11 +2121,11 @@
                             </div>
                             <div class="id-card-details">
                                 <div class="id-card-name" id="profile-name">Loading...</div>
-                                <div class="id-card-user-id" id="profile-id">ID: Guest</div>
-                                <div class="id-card-member-since" id="member-since">Guest User</div>
+                                <div class="id-card-user-id" id="profile-id">ID: --</div>
+                                <div class="id-card-member-since" id="member-since">Member Since: --</div>
                                 <div class="id-card-validity">
-                                    <div class="validity-label">STATUS</div>
-                                    <div class="validity-timer" id="validity-timer">Free Access</div>
+                                    <div class="validity-label">VALIDITY</div>
+                                    <div class="validity-timer" id="validity-timer">Unlimited Access</div>
                                 </div>
                             </div>
                         </div>
@@ -1916,7 +2150,7 @@
                         <li class="list-group-item" onclick="navigateTo('watchlist-page')">
                             <i class="fas fa-bookmark"></i> My Watchlist
                         </li>
-                        <!-- Notifications Menu Item -->
+                        <!-- NEW: Notifications Menu Item -->
                         <li class="list-group-item" onclick="navigateTo('notifications-page')">
                             <i class="fas fa-bell"></i> Notifications
                             <span id="notification-badge" style="margin-left: auto; background-color: #e50914; color: white; font-size: 11px; padding: 2px 6px; border-radius: 10px; display: none;">0</span>
@@ -1924,11 +2158,11 @@
                         <li class="list-group-item" onclick="openRequestModal()">
                             <i class="fas fa-envelope-open-text"></i> Request Content
                         </li>
-                        <!-- Apply Coupon Menu Item -->
+                        <!-- NEW: Apply Coupon Menu Item -->
                         <li class="list-group-item" onclick="navigateTo('redeem-page')">
                             <i class="fas fa-gift"></i> Apply Coupon
                         </li>
-                        <!-- Join Telegram Menu Item -->
+                        <!-- NEW: Join Telegram Menu Item -->
                         <li class="list-group-item" onclick="window.open('https://t.me/viralmemb_r', '_blank')">
                             <i class="fab fa-telegram"></i> Join Telegram
                         </li>
@@ -1941,14 +2175,14 @@
                         <li class="list-group-item" onclick="openPrivacyPolicy()">
                             <i class="fas fa-shield-alt"></i> Privacy Policy
                         </li>
-                        <li class="list-group-item" onclick="resetGuestSession()">
-                            <i class="fas fa-sign-out-alt"></i> Reset Session
+                        <li class="list-group-item" onclick="handleLogout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
                         </li>
                     </ul>
                 </div>
             </div>
 
-            <!-- SUBSCRIPTION PAGE -->
+            <!-- UPDATED: SUBSCRIPTION PAGE - 100% DYNAMIC -->
             <div id="subscription-page" class="page">
                 <div class="header">
                     <div class="logo-container">
@@ -2045,7 +2279,7 @@
                     </div>
                 </div>
                 
-                <!-- Main Description Section -->
+                <!-- NEW: Main Description Section -->
                 <div class="main-description-section" id="main-description-section" style="display: none;">
                     <div class="main-description-container">
                         <div class="main-description-title">Story / Notice / Information</div>
@@ -2055,7 +2289,7 @@
                     </div>
                 </div>
                 
-                <!-- Action Links Section -->
+                <!-- NEW: Action Links Section -->
                 <div class="action-links-section" id="action-links-section" style="display: none;">
                     <div class="action-links-title">Action Links</div>
                     <div id="action-links-container">
@@ -2134,7 +2368,7 @@
                 </div>
             </div>
 
-            <!-- NOTIFICATIONS PAGE -->
+            <!-- NEW: NOTIFICATIONS PAGE -->
             <div id="notifications-page" class="page">
                 <div class="header">
                     <div class="logo-container">
@@ -2165,7 +2399,7 @@
             </div>
         </main>
 
-        <!-- BOTTOM NAVIGATION -->
+        <!-- UPDATED: BOTTOM NAVIGATION with 5 items -->
         <nav class="bottom-nav" id="bottom-nav">
             <div class="nav-item active" onclick="navigateTo('home-page')">
                 <i class="fas fa-home"></i>
@@ -2277,7 +2511,7 @@
             </div>
         </div>
 
-        <!-- Checkout Modal -->
+        <!-- UPDATED: Checkout Modal - Fixed Design -->
         <div class="modal-overlay" id="checkout-modal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -2302,6 +2536,7 @@
                             <input type="text" id="transaction-id" placeholder="Enter the transaction ID from your app" required>
                         </div>
                         
+                        <!-- FIXED: Changed from UTR ID to Payment Number (Required) -->
                         <div class="checkout-form-group">
                             <label>Payment Number <span style="color: #e50914;">*</span></label>
                             <input type="tel" 
@@ -2333,7 +2568,7 @@
             </div>
         </div>
 
-        <!-- Poll Modal -->
+        <!-- UPDATED: Poll Modal - Now closable -->
         <div id="poll-popup">
             <div id="poll-header">
                 <i class="fas fa-poll"></i> Quick Poll
@@ -2369,7 +2604,7 @@
     </div>
 
     <script>
-        // Firebase Configuration
+        // Firebase Configuration (same as admin panel)
         const firebaseConfig = {
           apiKey: "AIzaSyCeCIZBgVa3KaKTF6v4jfgavVupxGo33Rg",
           authDomain: "movie-box-bd-8e17b.firebaseapp.com",
@@ -2381,6 +2616,7 @@
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        const auth = firebase.auth();
 
         // Global variables
         let currentUser = null;
@@ -2402,15 +2638,15 @@
         let enteredPin = '';
         let userNotifications = [];
         
-        // Real-time content listener variable
+        // 🔴 NEW: Real-time content listener variable
         let currentContentListener = null;
         
-        // AD SYSTEM VARIABLES
+        // FIXED: COMPLETE AD SYSTEM VARIABLES
         let adInterval = null;
         let currentAdInterval = 0;
         let adCountdownInterval = null;
         
-        // Ad settings
+        // Ad settings - will be loaded from Firestore admin panel
         let adsSettings = {
             enabled: false,
             adUrl: "",
@@ -2424,158 +2660,434 @@
             }
         };
         
-        // Floating banner ad settings
+        // NEW: Floating banner ad settings
         let floatingAdsSettings = {
-            enabled: false,
-            topScript: "",
-            bottomScript: "",
-            showIn: {
+            enabled: false,              // Admin থেকে on/off
+            topScript: "",               // উপরের ফ্লোটিং এডের script কোড
+            bottomScript: "",            // নিচের ফ্লোটিং এডের script কোড
+            showIn: {                    // কোন টাইপ কন্টেন্টে দেখাব
                 movies: true,
                 series: true,
-                livetv: false
+                livetv: false            // ডিফল্টে live tv তে না, চাইলে পরে true
             }
         };
         
+        // NEW: এখন কোন টাইপ কনটেন্ট প্লে হচ্ছে, এটা ধরে রাখবো
         let currentPlayingType = 'movie';
         
         let isPremiumUser = false;
         let userPlan = { name: 'FREE', expiresAt: null };
-        let pendingStreamUrl = null;
+        let pendingStreamUrl = null; // Store stream URL while ad is playing
 
         // === INITIALIZATION ===
         document.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('nh_box_theme') || 'filmzio-dark';
             applyTheme(savedTheme);
             
-            // Check if guest user already exists
-            checkGuestUser();
+            setupPasswordToggles();
+            setupAuthStateListener();
             
-            // Hide loading screen after 2 seconds
+            // Hide loading screen after 2 seconds (fallback)
             setTimeout(() => {
                 if (document.getElementById('loading-screen').style.display !== 'none') {
                     document.getElementById('loading-screen').style.display = 'none';
+                    document.getElementById('login-page').style.display = 'flex';
                 }
             }, 2000);
         });
 
-        // === GUEST USER SYSTEM ===
-        function checkGuestUser() {
-            const guestName = localStorage.getItem('nh_box_guest_name');
-            const guestId = localStorage.getItem('nh_box_guest_id');
-            
-            if (guestName && guestId) {
-                // Guest user exists, load app directly
-                currentUser = {
-                    uid: guestId,
-                    name: guestName,
-                    email: 'guest@example.com',
-                    role: 'guest',
-                    planType: 'FREE',
-                    isPremium: false,
-                    createdAt: new Date()
-                };
+        // === AUTHENTICATION FUNCTIONS ===
+        function setupAuthStateListener() {
+            auth.onAuthStateChanged(async (user) => {
+                if (user) {
+                    await handleAuthenticatedUser(user);
+                } else {
+                    showLoginScreen();
+                }
+                
+                document.getElementById('loading-screen').style.display = 'none';
+            });
+        }
+
+        async function handleAuthenticatedUser(firebaseUser) {
+            try {
+                const userDoc = await db.collection('users').doc(firebaseUser.uid).get();
+                
+                if (userDoc.exists) {
+                    currentUser = { 
+                        uid: firebaseUser.uid,
+                        ...userDoc.data() 
+                    };
+                    
+                    // Check user plan
+                    checkUserPlan();
+                    
+                    // Load user notifications
+                    loadUserNotifications();
+                    
+                } else {
+                    // ✅ FIXED: Signup সমস্যা - নতুন user create করার জন্য Firebase Rules compatible data
+                    const userData = {
+                        name: firebaseUser.displayName || firebaseUser.email.split('@')[0],
+                        email: firebaseUser.email,
+                        phone: '',
+                        balance: 0,
+                        isVerified: false,
+                        isBlocked: false,
+                        role: 'user',
+                        planType: 'FREE',
+                        isPremium: false,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        subscriptionExpiry: null
+                    };
+                    
+                    // ✅ FIXED: Firestore rules compatible create
+                    try {
+                        await db.collection('users').doc(firebaseUser.uid).set(userData);
+                        currentUser = { uid: firebaseUser.uid, ...userData };
+                        userPlan = { name: 'FREE', expiresAt: null };
+                        isPremiumUser = false;
+                        
+                        // ✅ User profile update
+                        await firebaseUser.updateProfile({ displayName: userData.name });
+                    } catch (error) {
+                        console.error('Error creating user document:', error);
+                        // Retry with simplified data if first attempt fails
+                        const simplifiedUserData = {
+                            name: userData.name,
+                            email: userData.email,
+                            role: 'user',
+                            planType: 'FREE',
+                            isPremium: false,
+                            isBlocked: false,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        };
+                        
+                        await db.collection('users').doc(firebaseUser.uid).set(simplifiedUserData);
+                        currentUser = { uid: firebaseUser.uid, ...simplifiedUserData };
+                    }
+                }
                 
                 showMainApp();
                 maybeShowAppLock();
-            } else {
-                // No guest user, show welcome screen
-                document.getElementById('loading-screen').style.display = 'none';
-                document.getElementById('welcome-page').style.display = 'flex';
+                
+            } catch (error) {
+                console.error('Error handling authenticated user:', error);
+                showError('login-error', 'Failed to load user data. Please try again.');
+                auth.signOut();
             }
         }
 
-        function handleGuestEntry() {
-            const nameInput = document.getElementById('guest-name-input');
-            const continueButton = document.getElementById('continue-button');
-            const buttonText = document.getElementById('continue-button-text');
+        function checkUserPlan() {
+            if (!currentUser) return;
             
-            const name = nameInput.value.trim();
+            const now = new Date().getTime();
             
-            if (!name) {
-                alert('Please enter your name');
+            // Check if user has active subscription
+            if (currentUser.subscription && currentUser.subscription.expiresAt) {
+                const expiryTime = currentUser.subscription.expiresAt;
+                
+                if (expiryTime > now) {
+                    // Active subscription
+                    userPlan = {
+                        name: currentUser.subscription.planName || 'GOLD',
+                        expiresAt: expiryTime
+                    };
+                    isPremiumUser = true;
+                } else {
+                    // Subscription expired
+                    userPlan = { name: 'FREE', expiresAt: null };
+                    isPremiumUser = false;
+                }
+            } else {
+                // No subscription
+                userPlan = { name: 'FREE', expiresAt: null };
+                isPremiumUser = false;
+            }
+            
+            updateProfilePlanDisplay();
+        }
+
+        function showLoginScreen() {
+            document.getElementById('app-content').style.display = 'none';
+            document.getElementById('signup-page').style.display = 'none';
+            document.getElementById('forgot-password-page').style.display = 'none';
+            document.getElementById('login-page').style.display = 'flex';
+            clearAuthMessages();
+        }
+
+        function showSignupScreen() {
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('forgot-password-page').style.display = 'none';
+            document.getElementById('signup-page').style.display = 'flex';
+            clearAuthMessages();
+        }
+
+        function showForgotPasswordScreen() {
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('signup-page').style.display = 'none';
+            document.getElementById('forgot-password-page').style.display = 'flex';
+            clearAuthMessages();
+        }
+
+        function showMainApp() {
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('signup-page').style.display = 'none';
+            document.getElementById('forgot-password-page').style.display = 'none';
+            document.getElementById('app-content').style.display = 'block';
+            
+            initializeApp();
+        }
+
+        async function handleEmailLogin() {
+            const emailInput = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            const loginButton = document.getElementById('login-button');
+            const buttonText = document.getElementById('login-button-text');
+            
+            if (!emailInput) {
+                showError('login-error', 'Please enter your email or username.');
                 return;
             }
             
-            continueButton.disabled = true;
-            buttonText.innerHTML = '<span class="loading-spinner"></span> Continuing...';
+            if (!password) {
+                showError('login-error', 'Please enter your password.');
+                return;
+            }
             
-            // Generate a unique guest ID
-            const guestId = 'guest_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            loginButton.disabled = true;
+            buttonText.innerHTML = '<span class="loading-spinner"></span> Logging in...';
             
-            // Store guest info in localStorage
-            localStorage.setItem('nh_box_guest_name', name);
-            localStorage.setItem('nh_box_guest_id', guestId);
-            
-            // Create user object
-            currentUser = {
-                uid: guestId,
-                name: name,
-                email: 'guest@example.com',
-                role: 'guest',
-                planType: 'FREE',
-                isPremium: false,
-                createdAt: new Date(),
-                subscription: null
-            };
-            
-            // Also create a Firestore document for the guest user
-            createGuestUserInFirestore(guestId, name);
-            
-            // Show main app
-            setTimeout(() => {
-                document.getElementById('welcome-page').style.display = 'none';
-                showMainApp();
-                maybeShowAppLock();
-            }, 500);
-        }
-
-        async function createGuestUserInFirestore(guestId, name) {
             try {
-                // Create guest user in Firestore
-                await db.collection('guests').doc(guestId).set({
-                    name: name,
-                    guestId: guestId,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    lastActive: firebase.firestore.FieldValue.serverTimestamp(),
-                    planType: 'FREE',
-                    isPremium: false,
-                    subscriptionExpiry: null
-                });
+                let email = emailInput;
+                if (!emailInput.includes('@')) {
+                    const usersSnapshot = await db.collection('users')
+                        .where('name', '==', emailInput)
+                        .limit(1)
+                        .get();
+                    
+                    if (usersSnapshot.empty) {
+                        showError('login-error', 'Username not found.');
+                        loginButton.disabled = false;
+                        buttonText.textContent = 'Login';
+                        return;
+                    }
+                    
+                    const userData = usersSnapshot.docs[0].data();
+                    email = userData.email;
+                }
                 
-                console.log('Guest user created in Firestore:', guestId);
+                await auth.signInWithEmailAndPassword(email, password);
+                
             } catch (error) {
-                console.error('Error creating guest user in Firestore:', error);
+                console.error('Login error:', error);
+                
+                let errorMessage = 'Login failed. ';
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        errorMessage += 'User not found.';
+                        break;
+                    case 'auth/wrong-password':
+                        errorMessage += 'Incorrect password.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage += 'Invalid email address.';
+                        break;
+                    case 'auth/user-disabled':
+                        errorMessage += 'This account has been disabled.';
+                        break;
+                    case 'auth/too-many-requests':
+                        errorMessage += 'Too many failed attempts. Please try again later.';
+                        break;
+                    default:
+                        errorMessage += 'Please check your credentials.';
+                }
+                
+                showError('login-error', errorMessage);
+                loginButton.disabled = false;
+                buttonText.textContent = 'Login';
             }
         }
 
-        function resetGuestSession() {
-            if (confirm('Are you sure you want to reset your session? This will clear your local data and you will need to enter your name again.')) {
-                // Clear localStorage
-                localStorage.removeItem('nh_box_guest_name');
-                localStorage.removeItem('nh_box_guest_id');
-                if (currentUser) {
-                    localStorage.removeItem(`nh_box_app_pin_${currentUser.uid}`);
-                    localStorage.removeItem(`nh_box_profile_icon_${currentUser.uid}`);
+        async function handleSignup() {
+            const username = document.getElementById('signup-username').value.trim();
+            const email = document.getElementById('signup-email').value.trim();
+            const phone = document.getElementById('signup-phone').value.trim();
+            const password = document.getElementById('signup-password').value;
+            const signupButton = document.getElementById('signup-button');
+            const buttonText = document.getElementById('signup-button-text');
+            
+            if (!username || username.length < 3) {
+                showError('signup-error', 'Username must be at least 3 characters.');
+                return;
+            }
+            
+            if (!email || !validateEmail(email)) {
+                showError('signup-error', 'Please enter a valid email address.');
+                return;
+            }
+            
+            if (!password || password.length < 6) {
+                showError('signup-error', 'Password must be at least 6 characters.');
+                return;
+            }
+            
+            signupButton.disabled = true;
+            buttonText.innerHTML = '<span class="loading-spinner"></span> Creating account...';
+            
+            try {
+                // ✅ FIXED: Firestore rules compatible signup - NO duplicate checks that require read permissions
+                // Create user in Firebase Auth first
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+                
+                // ✅ Firestore rules compatible user data (must match rules validation)
+                const userData = {
+                    name: username,
+                    email: email,
+                    phone: phone || '',
+                    balance: 0,
+                    isVerified: false,
+                    isBlocked: false,
+                    role: 'user',
+                    planType: 'FREE',
+                    isPremium: false,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    subscriptionExpiry: null
+                };
+                
+                // ✅ Create user document in Firestore (this should work with your rules)
+                await db.collection('users').doc(user.uid).set(userData);
+                
+                // Update user profile
+                await user.updateProfile({ displayName: username });
+                
+                // ✅ Success - user will be auto-logged in via auth state listener
+                
+            } catch (error) {
+                console.error('Signup error:', error);
+                
+                let errorMessage = 'Signup failed. ';
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        errorMessage += 'Email already registered.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage += 'Invalid email address.';
+                        break;
+                    case 'auth/operation-not-allowed':
+                        errorMessage += 'Email/password accounts are not enabled.';
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage += 'Password is too weak.';
+                        break;
+                    case 'permission-denied':
+                        errorMessage += 'Server permission denied. Please contact support.';
+                        break;
+                    default:
+                        errorMessage += 'Please try again.';
                 }
                 
-                // Clear all intervals
-                if (validityCountdownInterval) clearInterval(validityCountdownInterval);
-                if (sliderInterval) clearInterval(sliderInterval);
-                if (adInterval) clearInterval(adInterval);
-                if (adCountdownInterval) clearInterval(adCountdownInterval);
+                showError('signup-error', errorMessage);
+                signupButton.disabled = false;
+                buttonText.textContent = 'Signup';
+            }
+        }
+
+        async function handleGoogleLogin() {
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                provider.addScope('profile');
+                provider.addScope('email');
                 
-                // Remove real-time content listener
+                await auth.signInWithPopup(provider);
+                
+            } catch (error) {
+                console.error('Google login error:', error);
+                
+                let errorMessage = 'Google login failed. ';
+                if (error.code === 'auth/popup-closed-by-user') {
+                    errorMessage = 'Login popup was closed.';
+                } else if (error.code === 'auth/cancelled-popup-request') {
+                    errorMessage = 'Login cancelled.';
+                }
+                
+                showError('login-error', errorMessage);
+            }
+        }
+
+        async function handleForgotPassword() {
+            const email = document.getElementById('forgot-email').value.trim();
+            const forgotButton = document.getElementById('forgot-button');
+            const buttonText = document.getElementById('forgot-button-text');
+            
+            if (!email || !validateEmail(email)) {
+                showError('forgot-error', 'Please enter a valid email address.');
+                return;
+            }
+            
+            forgotButton.disabled = true;
+            buttonText.innerHTML = '<span class="loading-spinner"></span> Sending...';
+            
+            try {
+                await auth.sendPasswordResetEmail(email);
+                
+                showSuccess('forgot-success', 'Password reset email sent! Check your inbox.');
+                forgotButton.disabled = false;
+                buttonText.textContent = 'Send Reset Link';
+                document.getElementById('forgot-email').value = '';
+                
+            } catch (error) {
+                console.error('Forgot password error:', error);
+                
+                let errorMessage = 'Failed to send reset email. ';
+                if (error.code === 'auth/user-not-found') {
+                    errorMessage = 'No account found with this email.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Invalid email address.';
+                }
+                
+                showError('forgot-error', errorMessage);
+                forgotButton.disabled = false;
+                buttonText.textContent = 'Send Reset Link';
+            }
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                if (validityCountdownInterval) {
+                    clearInterval(validityCountdownInterval);
+                }
+                
+                if (sliderInterval) {
+                    clearInterval(sliderInterval);
+                }
+                
+                if (adInterval) {
+                    clearInterval(adInterval);
+                }
+                
+                if (adCountdownInterval) {
+                    clearInterval(adCountdownInterval);
+                }
+                
+                // 🔴 Remove real-time content listener
                 removeCurrentContentListener();
                 
-                // Reset current user
-                currentUser = null;
-                
-                // Show welcome screen
-                document.getElementById('app-content').style.display = 'none';
-                document.getElementById('welcome-page').style.display = 'flex';
-                document.getElementById('guest-name-input').value = '';
-                document.getElementById('continue-button').disabled = false;
-                document.getElementById('continue-button-text').textContent = 'Continue';
+                auth.signOut().then(() => {
+                    currentUser = null;
+                    localStorage.removeItem('nh_box_user');
+                    localStorage.removeItem('nh_box_app_pin');
+                    if (currentUser) {
+                        localStorage.removeItem(`nh_box_app_pin_${currentUser.uid}`);
+                    }
+                    localStorage.removeItem('nh_box_profile_icon');
+                    
+                    showLoginScreen();
+                }).catch((error) => {
+                    console.error('Logout error:', error);
+                    alert('Logout failed. Please try again.');
+                });
             }
         }
 
@@ -2618,7 +3130,7 @@
                         window.ageVerificationEnabled = appSettings.ageVerification;
                     }
                     
-                    // Load ads settings
+                    // FIXED: Load COMPLETE ads settings from Firestore
                     if (appSettings.ads) {
                         adsSettings = {
                             enabled: appSettings.ads.enabled || false,
@@ -2635,7 +3147,7 @@
                         
                         console.log('Ads settings loaded:', adsSettings);
                         
-                        // Load floating ads settings
+                        // NEW: Load floating ads settings from Firestore
                         floatingAdsSettings.enabled = !!appSettings.ads.floatingEnabled;
                         floatingAdsSettings.topScript = appSettings.ads.floatingTopScript || "";
                         floatingAdsSettings.bottomScript = appSettings.ads.floatingBottomScript || "";
@@ -2704,22 +3216,24 @@
             loadLiveTvChannels();
         }
 
-        // Dynamic Plan Loading System
+        // NEW: Dynamic Plan Loading System
         function loadPlans() {
             db.collection('plans').onSnapshot((snapshot) => {
                 allPlans = {};
                 snapshot.forEach(doc => {
                     const planData = doc.data();
+                    // Use the plan name field or document ID as key
                     const planKey = (planData.name || doc.id).toUpperCase();
                     allPlans[planKey] = { 
                         id: doc.id, 
                         ...planData,
+                        // Ensure all required fields have defaults
                         name: planData.name || doc.id,
                         rate: planData.rate || 0,
                         validityDays: planData.validityDays || 30,
                         features: planData.features || [],
                         qrUrl: planData.qrUrl || '',
-                        isActive: planData.isActive !== false,
+                        isActive: planData.isActive !== false, // Default to true
                         sortOrder: planData.sortOrder || 999
                     };
                 });
@@ -2736,7 +3250,7 @@
             });
         }
 
-        // Render Subscription Plans Dynamically
+        // NEW: Render Subscription Plans Dynamically
         function renderSubscriptionPlans() {
             const loadingState = document.getElementById('plans-loading-state');
             const emptyState = document.getElementById('plans-empty-state');
@@ -2819,7 +3333,7 @@
             successState.style.display = 'none';
         }
 
-        // Load movie categories for Movies page
+        // Load movie categories for Movies page with proper state handling
         function loadMoviesCategories() {
             const container = document.getElementById('movies-categories-container');
             
@@ -2878,6 +3392,7 @@
             // Filter movies by category
             const filteredMovies = allMovies.filter(movie => movie.category === categoryName);
             
+            // ✅ FIXED: Category-wise order sorting - Strict by order field
             // Sort by numeric order field (ascending)
             filteredMovies.sort((a, b) => {
                 const orderA = Number(a.order) || 999;
@@ -2972,7 +3487,7 @@
             });
         }
 
-        // Slider banner
+        // FIXED: Slider banner now clickable and navigates to movie details
         function renderFeaturedSlider() {
             const featured = [...allMovies, ...allSeries].slice(0, 5);
             const slider = document.getElementById('featured-slider');
@@ -3048,6 +3563,7 @@
             Object.keys(categories).forEach(category => {
                 const items = categories[category];
                 
+                // ✅ FIXED: Category-wise order sorting - Strict by order field
                 // Sort by numeric order field (ascending)
                 items.sort((a, b) => {
                     const orderA = Number(a.order) || 999;
@@ -3125,6 +3641,7 @@
         }
 
         // === CONTENT DETAILS ===
+        // 🔴 **FIXED: COMPLETE Real-time Description Update + Action Links System**
         async function showDetail(contentId, type = 'movie') {
             // Remove previous listener
             removeCurrentContentListener();
@@ -3144,11 +3661,11 @@
             // First load: Show cached content immediately
             updateDetailUI(content);
             
-            // SETUP REAL-TIME LISTENER for live updates
+            // 🔴 SETUP REAL-TIME LISTENER for live updates
             setupContentListener(contentId, type);
         }
 
-        // Real-time content listener setup
+        // 🔴 NEW: Real-time content listener setup
         function setupContentListener(contentId, type) {
             const collectionName = type === 'movie' ? 'movies' : 'webseries';
             const docRef = db.collection(collectionName).doc(contentId);
@@ -3184,7 +3701,7 @@
             });
         }
 
-        // Remove current content listener
+        // 🔴 NEW: Remove current content listener
         function removeCurrentContentListener() {
             if (currentContentListener) {
                 currentContentListener(); // Unsubscribe
@@ -3192,7 +3709,7 @@
             }
         }
 
-        // Detail UI Update function
+        // 🔴 UPDATED: Detail UI Update function (includes description and action links)
         async function updateDetailUI(content) {
             // Update basic details
             document.getElementById('detail-title').textContent = content.title;
@@ -3232,7 +3749,7 @@
             
             // Check if user has this in watchlist
             if (currentUser) {
-                const watchlistDoc = await db.collection('guests').doc(currentUser.uid)
+                const watchlistDoc = await db.collection('users').doc(currentUser.uid)
                     .collection('watchlist').doc(content.id).get();
                 const watchlistBtn = document.getElementById('watchlist-btn');
                 if (watchlistBtn) {
@@ -3244,7 +3761,7 @@
                 }
             }
             
-            // Main Description - Real-time Update
+            // 🔴 FIXED: Main Description - Real-time Update
             const mainDescSection = document.getElementById('main-description-section');
             const mainDescContent = document.getElementById('main-description-content');
             
@@ -3271,7 +3788,7 @@
                 mainDescSection.style.display = 'none';
             }
             
-            // ACTION LINKS SYSTEM
+            // 🔴 **FIXED: ACTION LINKS SYSTEM - WORKING 100%**
             const actionLinksSection = document.getElementById('action-links-section');
             const actionLinksContainer = document.getElementById('action-links-container');
             
@@ -3279,12 +3796,12 @@
             actionLinksSection.style.display = 'none';
             actionLinksContainer.innerHTML = '';
             
-            // Check if content has category
+            // ✅ Check if content has category
             if (content.category) {
                 try {
                     console.log('Loading Action Links for category:', content.category);
                     
-                    // First, get the category document by name to find its ID
+                    // ✅ First, get the category document by name to find its ID
                     const categoriesSnapshot = await db.collection('categories')
                         .where('name', '==', content.category)
                         .limit(1)
@@ -3306,7 +3823,7 @@
                     const categoryId = categoryDoc.id;
                     console.log('Found category ID:', categoryId, 'for name:', content.category);
 
-                    // Now fetch action links using the category ID
+                    // ✅ Now fetch action links using the category ID
                     const snapshot = await db
                         .collection('category_action_links')
                         .where('category_id', '==', categoryId)
@@ -3315,11 +3832,11 @@
 
                     console.log('Found Action Links:', snapshot.size);
 
-                    // Check if data exists
+                    // ✅ Check if data exists
                     if (snapshot.size > 0) {
                         actionLinksSection.style.display = 'block';
                         
-                        // Create each Action Link
+                        // ✅ Create each Action Link
                         snapshot.forEach((doc) => {
                             const actionLink = doc.data();
                             console.log('Action Link data:', actionLink);
@@ -3407,11 +3924,11 @@
 
         async function toggleWatchlist() {
             if (!currentUser || !currentContent) {
-                alert('Please enter your name first to use watchlist');
+                alert('Please login to use watchlist');
                 return;
             }
             
-            const watchlistRef = db.collection('guests').doc(currentUser.uid)
+            const watchlistRef = db.collection('users').doc(currentUser.uid)
                 .collection('watchlist').doc(currentContent.id);
             const watchlistDoc = await watchlistRef.get();
             const watchlistBtn = document.getElementById('watchlist-btn');
@@ -3441,7 +3958,7 @@
             if (!currentUser) return;
             
             try {
-                const watchlistSnapshot = await db.collection('guests').doc(currentUser.uid)
+                const watchlistSnapshot = await db.collection('users').doc(currentUser.uid)
                     .collection('watchlist').orderBy('addedAt', 'desc').get();
                 
                 const container = document.getElementById('watchlist-container');
@@ -3655,7 +4172,7 @@
             }
         }
 
-        // AD SYSTEM FUNCTIONS
+        // FIXED: COMPLETE AD SYSTEM FUNCTIONS
         function showAdBeforePlay(streamUrl) {
             pendingStreamUrl = streamUrl;
             
@@ -3794,7 +4311,7 @@
                 if (isPremiumUser) {
                     memberType.textContent = 'PREMIUM MEMBER';
                 } else {
-                    memberType.textContent = 'GUEST MEMBER';
+                    memberType.textContent = 'FREE MEMBER';
                 }
             }
             
@@ -3808,7 +4325,7 @@
                 }
             } else {
                 if (validityTimer) {
-                    validityTimer.textContent = 'Free Access';
+                    validityTimer.textContent = 'Unlimited Access';
                     validityTimer.classList.remove('blinking');
                 }
                 if (planExpiryInfo) {
@@ -3904,7 +4421,7 @@
 
         async function completePayment() {
             if (!currentUser) {
-                alert('Please enter your name first to purchase a plan');
+                alert('Please login to purchase a plan');
                 return;
             }
             
@@ -3939,8 +4456,9 @@
             try {
                 // Record payment in planRequests collection (for admin review)
                 await db.collection('planRequests').add({
-                    guestId: currentUser.uid,
-                    guestName: currentUser.name,
+                    userId: currentUser.uid,
+                    userName: currentUser.name,
+                    userEmail: currentUser.email,
                     planName: plan.name,
                     planId: plan.id,
                     amount: plan.rate,
@@ -3967,7 +4485,7 @@
         // === REDEEM COUPON FUNCTIONS ===
         async function redeemCoupon() {
             if (!currentUser) {
-                alert('Please enter your name first to redeem coupon');
+                alert('Please login to redeem coupon');
                 return;
             }
             
@@ -4029,24 +4547,24 @@
                 let newExpiresAt;
                 const extraDays = coupon.extraDays || 30;
                 
-                // Get current guest data
-                const guestDoc = await db.collection('guests').doc(currentUser.uid).get();
-                const guestData = guestDoc.data();
+                // Get current user data
+                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                const userData = userDoc.data();
                 
                 if (coupon.benefitType === 'plan') {
                     // Apply new plan (like GOLD)
                     const planName = coupon.planName || 'GOLD';
                     
-                    if (guestData.subscription && guestData.subscription.expiresAt > now.getTime()) {
+                    if (userData.subscription && userData.subscription.expiresAt > now.getTime()) {
                         // User already has an active subscription - add days to current expiry
-                        newExpiresAt = guestData.subscription.expiresAt + (extraDays * 24 * 60 * 60 * 1000);
+                        newExpiresAt = userData.subscription.expiresAt + (extraDays * 24 * 60 * 60 * 1000);
                     } else {
                         // New subscription starting from now
                         newExpiresAt = now.getTime() + (extraDays * 24 * 60 * 60 * 1000);
                     }
                     
-                    // Update guest subscription in Firestore
-                    await db.collection('guests').doc(currentUser.uid).update({
+                    // Update user subscription in Firestore
+                    await db.collection('users').doc(currentUser.uid).update({
                         subscription: {
                             planName: planName,
                             expiresAt: newExpiresAt,
@@ -4054,7 +4572,7 @@
                         }
                     });
                     
-                    // Update local guest data
+                    // Update local user data
                     currentUser.subscription = {
                         planName: planName,
                         expiresAt: newExpiresAt
@@ -4067,15 +4585,15 @@
                     
                 } else if (coupon.benefitType === 'days') {
                     // Add extra days to existing plan
-                    if (guestData.subscription && guestData.subscription.expiresAt) {
-                        newExpiresAt = guestData.subscription.expiresAt + (extraDays * 24 * 60 * 60 * 1000);
+                    if (userData.subscription && userData.subscription.expiresAt) {
+                        newExpiresAt = userData.subscription.expiresAt + (extraDays * 24 * 60 * 60 * 1000);
                     } else {
                         newExpiresAt = now.getTime() + (extraDays * 24 * 60 * 60 * 1000);
                     }
                     
-                    const planName = guestData.subscription?.planName || 'FREE';
+                    const planName = userData.subscription?.planName || 'FREE';
                     
-                    await db.collection('guests').doc(currentUser.uid).update({
+                    await db.collection('users').doc(currentUser.uid).update({
                         subscription: {
                             planName: planName,
                             expiresAt: newExpiresAt,
@@ -4094,7 +4612,7 @@
                     `;
                 }
                 
-                // Mark coupon as redeemed by this guest
+                // Mark coupon as redeemed by this user
                 await db.collection('coupons').doc(code).update({
                     [`redeemedBy.${currentUser.uid}`]: true,
                     lastRedeemedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -4115,45 +4633,10 @@
             }
         }
 
-        function checkUserPlan() {
-            if (!currentUser) return;
-            
-            // For guest users, check if they have subscription in Firestore
-            db.collection('guests').doc(currentUser.uid).get().then(doc => {
-                if (doc.exists) {
-                    const guestData = doc.data();
-                    const now = new Date().getTime();
-                    
-                    if (guestData.subscription && guestData.subscription.expiresAt) {
-                        const expiryTime = guestData.subscription.expiresAt;
-                        
-                        if (expiryTime > now) {
-                            // Active subscription
-                            userPlan = {
-                                name: guestData.subscription.planName || 'GOLD',
-                                expiresAt: expiryTime
-                            };
-                            isPremiumUser = true;
-                        } else {
-                            // Subscription expired
-                            userPlan = { name: 'FREE', expiresAt: null };
-                            isPremiumUser = false;
-                        }
-                    } else {
-                        // No subscription
-                        userPlan = { name: 'FREE', expiresAt: null };
-                        isPremiumUser = false;
-                    }
-                    
-                    updateProfilePlanDisplay();
-                }
-            });
-        }
-
         // === REQUEST FUNCTIONS ===
         async function submitRequest() {
             if (!currentUser) {
-                alert('Please enter your name first to submit request');
+                alert('Please login to submit request');
                 return;
             }
             
@@ -4190,7 +4673,7 @@
         // === COMPLAINT FUNCTIONS ===
         async function submitComplaint() {
             if (!currentUser) {
-                alert('Please enter your name first to submit complaint');
+                alert('Please login to submit complaint');
                 return;
             }
             
@@ -4206,8 +4689,8 @@
                 await db.collection('complaints').add({
                     subject: subject,
                     description: description,
-                    guestId: currentUser.uid,
-                    guestName: currentUser.name,
+                    userId: currentUser.uid,
+                    userName: currentUser.name,
                     status: 'open',
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
@@ -4235,7 +4718,7 @@
                 
                 // Load notifications from Firebase
                 const notificationsSnapshot = await db.collection('notifications')
-                    .where('guestId', '==', currentUser.uid)
+                    .where('userId', '==', currentUser.uid)
                     .orderBy('createdAt', 'desc')
                     .get();
                 
@@ -4453,21 +4936,21 @@
         function setupProfilePage() {
             if (!currentUser) return;
             
-            document.getElementById('profile-name').textContent = currentUser.name || 'Guest';
-            document.getElementById('profile-id').textContent = `ID: Guest`;
+            document.getElementById('profile-name').textContent = currentUser.name || 'User';
+            document.getElementById('profile-id').textContent = `ID: ${currentUser.uid.substring(0, 8)}...`;
             
             // Set member since
             if (currentUser.createdAt) {
                 const date = currentUser.createdAt.toDate ? currentUser.createdAt.toDate() : new Date();
-                document.getElementById('member-since').textContent = `Joined: ${date.toLocaleDateString()}`;
+                document.getElementById('member-since').textContent = `Member Since: ${date.toLocaleDateString()}`;
             }
             
             // Set profile icon
-            const savedIcon = localStorage.getItem(`nh_box_profile_icon_${currentUser.uid}`) || 'fa-user';
+            const savedIcon = localStorage.getItem('nh_box_profile_icon') || 'fa-user';
             document.getElementById('profile-icon').innerHTML = `<i class="fas ${savedIcon}"></i>`;
             
-            // Check user plan from Firestore
-            checkUserPlan();
+            // Update subscription info
+            updateProfilePlanDisplay();
         }
 
         function openIconSelector() {
@@ -4491,9 +4974,7 @@
         }
 
         function selectProfileIcon(icon) {
-            if (!currentUser) return;
-            
-            localStorage.setItem(`nh_box_profile_icon_${currentUser.uid}`, icon);
+            localStorage.setItem('nh_box_profile_icon', icon);
             document.getElementById('profile-icon').innerHTML = `<i class="fas ${icon}"></i>`;
             alert('Profile icon updated!');
         }
@@ -4529,7 +5010,7 @@
                 );
             });
             
-            // Sort movies by order field
+            // ✅ FIXED: Category-wise order sorting - Sort movies by order field
             filteredContent.sort((a, b) => {
                 if (a.type === 'movie' && b.type === 'movie') {
                     const orderA = Number(a.order) || 999;
@@ -4665,15 +5146,15 @@
             }
             
             if (!currentUser) {
-                alert('Please enter your name first to vote');
+                alert('Please login to vote');
                 return;
             }
             
             try {
                 // Record vote in Firebase
                 await db.collection('poll_votes').add({
-                    guestId: currentUser.uid,
-                    guestName: currentUser.name,
+                    userId: currentUser.uid,
+                    userName: currentUser.name,
                     option: selectedPollOption,
                     votedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
@@ -4706,7 +5187,7 @@
                 return;
             }
             
-            // If leaving detail page, remove content listener
+            // 🔴 If leaving detail page, remove content listener
             if (currentPage && currentPage.id === 'detail-page' && pageId !== 'detail-page') {
                 removeCurrentContentListener();
             }
@@ -4860,6 +5341,71 @@
         }
 
         // === UTILITY FUNCTIONS ===
+        function setupPasswordToggles() {
+            const loginToggle = document.getElementById('login-password-toggle');
+            const loginPassword = document.getElementById('login-password');
+            const signupToggle = document.getElementById('signup-password-toggle');
+            const signupPassword = document.getElementById('signup-password');
+            
+            if (loginToggle) {
+                loginToggle.addEventListener('click', () => {
+                    const type = loginPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+                    loginPassword.setAttribute('type', type);
+                    loginToggle.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+                });
+            }
+            
+            if (signupToggle) {
+                signupToggle.addEventListener('click', () => {
+                    const type = signupPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+                    signupPassword.setAttribute('type', type);
+                    signupToggle.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+                });
+            }
+        }
+
+        function clearAuthMessages() {
+            const errorElements = ['login-error', 'signup-error', 'forgot-error'];
+            const successElements = ['login-success', 'signup-success', 'forgot-success'];
+            
+            errorElements.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
+            
+            successElements.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
+        }
+
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.textContent = message;
+                element.style.display = 'block';
+                setTimeout(() => {
+                    element.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        function showSuccess(elementId, message) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.textContent = message;
+                element.style.display = 'block';
+                setTimeout(() => {
+                    element.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
         function filterAdultContent() {
             if (!window.adultVisible) {
                 const adultCards = document.querySelectorAll('.content-card');
@@ -4869,14 +5415,6 @@
                     }
                 });
             }
-        }
-
-        // === SHOW MAIN APP ===
-        function showMainApp() {
-            document.getElementById('welcome-page').style.display = 'none';
-            document.getElementById('app-content').style.display = 'block';
-            
-            initializeApp();
         }
 
         // === INITIALIZE APP ===
@@ -4904,10 +5442,10 @@
             // Setup disclaimer button
             document.getElementById('enter-btn').addEventListener('click', proceedToApp);
             
-            // Load app settings
+            // Load app settings (including ads settings from admin panel)
             loadAppSettings();
             
-            // Load content
+            // Load content (including plans)
             loadContent();
         }
 
@@ -4933,7 +5471,7 @@
                 (movie.description && movie.description.toLowerCase().includes(searchTerm))
             );
             
-            // Sort by order field
+            // ✅ FIXED: Category-wise order sorting - Sort by order field
             filteredMovies.sort((a, b) => {
                 const orderA = Number(a.order) || 999;
                 const orderB = Number(b.order) || 999;
@@ -4969,7 +5507,7 @@
             let html = '<div class="movies-category-grid">';
             Object.keys(categories).forEach(category => {
                 const movies = categories[category];
-                // Sort by order field inside category
+                // ✅ FIXED: Category-wise order sorting - Sort by order field inside category
                 movies.sort((a, b) => {
                     const orderA = Number(a.order) || 999;
                     const orderB = Number(b.order) || 999;
@@ -4993,6 +5531,15 @@
         }
 
         // Shortcut functions for UI
+        function showLogin() { showLoginScreen(); }
+        function showSignup() { showSignupScreen(); }
+        function showForgotPassword() { showForgotPasswordScreen(); }
+        
+        // Temporary placeholder functions
+        function showChannelMaintenance(channelName) {
+            alert(`${channelName} is currently under maintenance. Please try again later.`);
+        }
+        
         function showCategory(category) {
             showMoviesByCategory(category);
         }
@@ -5011,8 +5558,10 @@
             closeModal('request-modal');
         }
         
-        function showChannelMaintenance(channelName) {
-            alert(`${channelName} is currently under maintenance. Please try again later.`);
+        let currentFilters = { searchTerm: '' };
+        function filterContent() {
+            // This would filter content based on search term
+            console.log('Filtering content with:', currentFilters.searchTerm);
         }
     </script>
 </body>
