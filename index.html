@@ -397,12 +397,80 @@
         }
 
         /* --- MAIN APP STYLES --- */
-        .header { background: var(--header-bg); padding: 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); }
-        .logo-container { display: flex; align-items: center; gap: 10px; }
-        .logo { font-size: 28px; font-weight: bold; color: var(--text-color); font-style: italic; }
-        .logo .fa-film { color: var(--primary-color); margin-left: 5px;}
-        .header-controls { flex: 1; display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-left: 15px; }
-        .search-input { width: 100%; max-width: 200px; flex: 1; padding: 10px 15px; background-color: rgba(255,255,255,0.1); border: 1px solid var(--border-color); border-radius: 20px; color: var(--text-color); font-size: 14px; }
+        .header { 
+            background: var(--header-bg); 
+            padding: 15px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            backdrop-filter: blur(10px); 
+            border-bottom: 1px solid var(--border-color); 
+        }
+        
+        .logo-container { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+        }
+        
+        .logo { 
+            font-size: 28px; 
+            font-weight: bold; 
+            color: var(--text-color); 
+            font-style: italic; 
+        }
+        
+        .logo .fa-film { 
+            color: var(--primary-color); 
+            margin-left: 5px;
+        }
+        
+        /* UPDATED: Home header - Profile icon removed */
+        #home-page .header-controls { 
+            flex: 1; 
+            display: flex; 
+            justify-content: flex-end; 
+            align-items: center; 
+            margin-left: 15px; 
+        }
+        
+        /* UPDATED: Home page search bar - larger without profile icon */
+        #home-page .search-input { 
+            width: 100%; 
+            max-width: none; 
+            padding: 12px 20px; 
+            background-color: rgba(255,255,255,0.1); 
+            border: 1px solid var(--border-color); 
+            border-radius: 25px; 
+            color: var(--text-color); 
+            font-size: 16px; 
+            cursor: pointer;
+        }
+        
+        /* Other pages header controls (keep original) */
+        .header-controls:not(#home-page .header-controls) { 
+            flex: 1; 
+            display: flex; 
+            justify-content: flex-end; 
+            align-items: center; 
+            gap: 10px; 
+            margin-left: 15px; 
+        }
+        
+        .search-input:not(#home-page .search-input) { 
+            width: 100%; 
+            max-width: 200px; 
+            flex: 1; 
+            padding: 10px 15px; 
+            background-color: rgba(255,255,255,0.1); 
+            border: 1px solid var(--border-color); 
+            border-radius: 20px; 
+            color: var(--text-color); 
+            font-size: 14px; 
+        }
         
         .live-indicator {
             display: none;
@@ -489,62 +557,417 @@
             font-size: 14px;
         }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 1100; display: none; justify-content: center; align-items: center; padding: 15px; }
-        .modal-content { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; width: 100%; max-width: 450px; max-height: 90vh; display: flex; flex-direction: column; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow-y: auto; } /* FIXED: Added overflow-y */
-        .modal-close { position: absolute; top: 10px; right: 10px; background: var(--primary-color); color: var(--bg-color); border: none; width: 30px; height: 30px; border-radius: 50%; font-size: 20px; cursor: pointer; line-height: 30px; text-align: center; }
+        .modal-overlay { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.8); 
+            backdrop-filter: blur(8px); 
+            z-index: 1100; 
+            display: none; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 15px; 
+        }
         
-        .btn { background-color: var(--primary-color); color: var(--bg-color); border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; flex: 1; display: flex; justify-content: center; align-items: center; gap: 8px; transition: all 0.3s; box-shadow: 0 4px 8px rgba(0, 170, 255, 0.3); } 
-        .btn:hover { background-color: var(--primary-color-hover); transform: translateY(-2px); } 
-        .btn-secondary { background-color: rgba(255,255,255,0.2); backdrop-filter: blur(10px); box-shadow: 0 4px 8px var(--shadow-color); color: var(--text-color); } 
-        .page-header { padding: 20px 15px; font-size: 24px; font-weight: bold; border-bottom: 1px solid var(--border-color); margin-bottom: 20px; color: var(--text-color); } 
-        .loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-color); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; } 
-        .loading-logo { font-size: 48px; font-weight: bold; color: var(--text-color); margin-bottom: 20px; animation: pulse 1.5s infinite; font-style: italic;} 
-        .loading-logo .fa-film { color: var(--primary-color);} 
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } } 
-        .category-section { margin-bottom: 35px; } 
-        .category-title { font-size: 20px; font-weight: bold; color: var(--text-color); position: relative; padding-left: 15px; } 
-        .category-title::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 5px; height: 20px; background-color: var(--primary-color); border-radius: 3px; } 
-        .content-slider { display: flex; overflow-x: auto; padding: 20px 15px; scrollbar-width: none; gap: 12px; } /* FIXED: Added left-right padding */
-        .content-slider::-webkit-scrollbar { display: none; } 
-        .content-card { flex: 0 0 calc(33.33% - 8px); position: relative; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px var(--shadow-color); transition: all 0.3s; cursor: pointer; background: var(--card-bg); } 
-        .content-card:hover { transform: scale(1.05); } 
-        .content-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; } 
+        .modal-content { 
+            background-color: var(--card-bg); 
+            border: 1px solid var(--border-color); 
+            border-radius: 12px; 
+            width: 100%; 
+            max-width: 450px; 
+            max-height: 90vh; 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            overflow-y: auto; 
+        }
         
-        .detail-backdrop { width: 100%; height: 250px; position: relative; } 
-        .detail-backdrop img { width: 100%; height: 100%; object-fit: cover; } 
-        .detail-backdrop::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 120px; background: linear-gradient(to top, var(--bg-color), transparent); } 
-        body[data-theme="gradient-luxe"] .detail-backdrop::after { background: linear-gradient(to top, var(--card-bg), transparent); } 
-        .detail-content { padding: 15px; display: flex; margin-top: -80px; position: relative; z-index: 10; } 
-        .detail-title { font-size: 24px; font-weight: bold; margin-bottom: 10px; color: var(--text-color); } 
-        .detail-meta span { color: var(--secondary-text-color); } 
-        .detail-storyline { color: var(--text-color); } 
-        .episode-item, .comment-item { background-color: var(--card-bg); border-radius: 10px; padding: 12px; margin-bottom: 12px; border: 1px solid var(--border-color); } 
+        .modal-close { 
+            position: absolute; 
+            top: 10px; 
+            right: 10px; 
+            background: var(--primary-color); 
+            color: var(--bg-color); 
+            border: none; 
+            width: 30px; 
+            height: 30px; 
+            border-radius: 50%; 
+            font-size: 20px; 
+            cursor: pointer; 
+            line-height: 30px; 
+            text-align: center; 
+        }
         
-        .slider-container { position: relative; width: calc(100% - 30px); height: 220px; overflow: hidden; margin-bottom: 25px; border-radius: 15px; margin: 15px; } /* FIXED: Added width calculation for equal padding */
-        .slider { display: flex; transition: transform 0.5s ease; height: 100%; cursor: pointer; } /* FIXED: Added cursor pointer */
-        .slide { min-width: 100%; height: 100%; position: relative; } 
-        .slide img { width: 100%; height: 100%; object-fit: cover; } 
-        .slide-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 20px; } 
-        .slide-title { font-size: 22px; font-weight: bold; margin-bottom: 8px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); } 
-        .slide-meta { font-size: 14px; color: #ddd; display: flex; align-items: center; gap: 10px; } 
-        .slide-rating { display: flex; align-items: center; gap: 5px; color: #ffd700; } 
-        .slider-indicators { position: absolute; bottom: 15px; right: 15px; display: flex; gap: 8px; } 
-        .indicator { width: 8px; height: 8px; border-radius: 50%; background-color: rgba(255,255,255,0.5); cursor: pointer; transition: all 0.3s; } 
-        .indicator.active { background-color: var(--primary-color); transform: scale(1.2); } 
-        .category-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 15px; } /* FIXED: Added padding */
-        .see-all { color: var(--primary-color); font-size: 14px; text-decoration: none; font-weight: bold; } 
-        .see-all i { margin-left: 4px; font-size: 12px; } 
-        .content-title { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 30px 10px 10px; font-size: 13px; font-weight: bold; text-align: center; } 
-        .detail-poster { width: 120px; height: 180px; border-radius: 10px; overflow: hidden; border: 3px solid var(--border-color); margin-right: 15px; } 
-        .detail-poster img { width: 100%; height: 100%; object-fit: cover; } 
-        .detail-info { flex: 1; } 
-        .detail-meta { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 15px; font-size: 14px; } 
-        .detail-meta span i { color: var(--primary-color); margin-right: 5px; } 
-        .detail-actions { display: flex; gap: 12px; margin: 20px 0; } 
-        .detail-storyline { margin-bottom: 25px; line-height: 1.6; font-size: 15px; } 
-        .detail-cast, .similar-section, .comments-section { margin-bottom: 25px; } 
-        .detail-cast h3, .similar-section h3, .comments-section h3 { font-size: 18px; margin-bottom: 15px; color: var(--text-color); position: relative; padding-left: 15px; } 
-        .detail-cast h3::before, .similar-section h3::before, .comments-section h3::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 5px; height: 18px; background-color: var(--primary-color); border-radius: 3px; } 
+        .btn { 
+            background-color: var(--primary-color); 
+            color: var(--bg-color); 
+            border: none; 
+            padding: 12px 20px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-weight: bold; 
+            flex: 1; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 8px; 
+            transition: all 0.3s; 
+            box-shadow: 0 4px 8px rgba(0, 170, 255, 0.3); 
+        } 
+        
+        .btn:hover { 
+            background-color: var(--primary-color-hover); 
+            transform: translateY(-2px); 
+        } 
+        
+        .btn-secondary { 
+            background-color: rgba(255,255,255,0.2); 
+            backdrop-filter: blur(10px); 
+            box-shadow: 0 4px 8px var(--shadow-color); 
+            color: var(--text-color); 
+        } 
+        
+        .page-header { 
+            padding: 20px 15px; 
+            font-size: 24px; 
+            font-weight: bold; 
+            border-bottom: 1px solid var(--border-color); 
+            margin-bottom: 20px; 
+            color: var(--text-color); 
+        } 
+        
+        .loading-screen { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: var(--bg-color); 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 2000; 
+        } 
+        
+        .loading-logo { 
+            font-size: 48px; 
+            font-weight: bold; 
+            color: var(--text-color); 
+            margin-bottom: 20px; 
+            animation: pulse 1.5s infinite; 
+            font-style: italic;
+        } 
+        
+        .loading-logo .fa-film { 
+            color: var(--primary-color);
+        } 
+        
+        @keyframes pulse { 
+            0%, 100% { transform: scale(1); } 
+            50% { transform: scale(1.05); } 
+        } 
+        
+        .category-section { 
+            margin-bottom: 35px; 
+        } 
+        
+        .category-title { 
+            font-size: 20px; 
+            font-weight: bold; 
+            color: var(--text-color); 
+            position: relative; 
+            padding-left: 15px; 
+        } 
+        
+        .category-title::before { 
+            content: ''; 
+            position: absolute; 
+            left: 0; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            width: 5px; 
+            height: 20px; 
+            background-color: var(--primary-color); 
+            border-radius: 3px; 
+        } 
+        
+        .content-slider { 
+            display: flex; 
+            overflow-x: auto; 
+            padding: 20px 15px; 
+            scrollbar-width: none; 
+            gap: 12px; 
+        }
+        
+        .content-slider::-webkit-scrollbar { 
+            display: none; 
+        } 
+        
+        .content-card { 
+            flex: 0 0 calc(33.33% - 8px); 
+            position: relative; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            box-shadow: 0 4px 8px var(--shadow-color); 
+            transition: all 0.3s; 
+            cursor: pointer; 
+            background: var(--card-bg); 
+        } 
+        
+        .content-card:hover { 
+            transform: scale(1.05); 
+        } 
+        
+        .content-card img { 
+            width: 100%; 
+            aspect-ratio: 2/3; 
+            object-fit: cover; 
+        } 
+        
+        .detail-backdrop { 
+            width: 100%; 
+            height: 250px; 
+            position: relative; 
+        } 
+        
+        .detail-backdrop img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+        } 
+        
+        .detail-backdrop::after { 
+            content: ''; 
+            position: absolute; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            height: 120px; 
+            background: linear-gradient(to top, var(--bg-color), transparent); 
+        } 
+        
+        body[data-theme="gradient-luxe"] .detail-backdrop::after { 
+            background: linear-gradient(to top, var(--card-bg), transparent); 
+        } 
+        
+        .detail-content { 
+            padding: 15px; 
+            display: flex; 
+            margin-top: -80px; 
+            position: relative; 
+            z-index: 10; 
+        } 
+        
+        .detail-title { 
+            font-size: 24px; 
+            font-weight: bold; 
+            margin-bottom: 10px; 
+            color: var(--text-color); 
+        } 
+        
+        .detail-meta span { 
+            color: var(--secondary-text-color); 
+        } 
+        
+        .detail-storyline { 
+            color: var(--text-color); 
+        } 
+        
+        .episode-item, .comment-item { 
+            background-color: var(--card-bg); 
+            border-radius: 10px; 
+            padding: 12px; 
+            margin-bottom: 12px; 
+            border: 1px solid var(--border-color); 
+        } 
+        
+        .slider-container { 
+            position: relative; 
+            width: calc(100% - 30px); 
+            height: 220px; 
+            overflow: hidden; 
+            margin-bottom: 25px; 
+            border-radius: 15px; 
+            margin: 15px; 
+        }
+        
+        .slider { 
+            display: flex; 
+            transition: transform 0.5s ease; 
+            height: 100%; 
+            cursor: pointer; 
+        }
+        
+        .slide { 
+            min-width: 100%; 
+            height: 100%; 
+            position: relative; 
+        } 
+        
+        .slide img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+        } 
+        
+        .slide-overlay { 
+            position: absolute; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); 
+            padding: 20px; 
+        } 
+        
+        .slide-title { 
+            font-size: 22px; 
+            font-weight: bold; 
+            margin-bottom: 8px; 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5); 
+        } 
+        
+        .slide-meta { 
+            font-size: 14px; 
+            color: #ddd; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+        } 
+        
+        .slide-rating { 
+            display: flex; 
+            align-items: center; 
+            gap: 5px; 
+            color: #ffd700; 
+        } 
+        
+        .slider-indicators { 
+            position: absolute; 
+            bottom: 15px; 
+            right: 15px; 
+            display: flex; 
+            gap: 8px; 
+        } 
+        
+        .indicator { 
+            width: 8px; 
+            height: 8px; 
+            border-radius: 50%; 
+            background-color: rgba(255,255,255,0.5); 
+            cursor: pointer; 
+            transition: all 0.3s; 
+        } 
+        
+        .indicator.active { 
+            background-color: var(--primary-color); 
+            transform: scale(1.2); 
+        } 
+        
+        .category-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 15px; 
+            padding: 0 15px; 
+        }
+        
+        .see-all { 
+            color: var(--primary-color); 
+            font-size: 14px; 
+            text-decoration: none; 
+            font-weight: bold; 
+        } 
+        
+        .see-all i { 
+            margin-left: 4px; 
+            font-size: 12px; 
+        } 
+        
+        .content-title { 
+            position: absolute; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); 
+            padding: 30px 10px 10px; 
+            font-size: 13px; 
+            font-weight: bold; 
+            text-align: center; 
+        } 
+        
+        .detail-poster { 
+            width: 120px; 
+            height: 180px; 
+            border-radius: 10px; 
+            overflow: hidden; 
+            border: 3px solid var(--border-color); 
+            margin-right: 15px; 
+        } 
+        
+        .detail-poster img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+        } 
+        
+        .detail-info { 
+            flex: 1; 
+        } 
+        
+        .detail-meta { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 12px; 
+            margin-bottom: 15px; 
+            font-size: 14px; 
+        } 
+        
+        .detail-meta span i { 
+            color: var(--primary-color); 
+            margin-right: 5px; 
+        } 
+        
+        .detail-actions { 
+            display: flex; 
+            gap: 12px; 
+            margin: 20px 0; 
+        } 
+        
+        .detail-storyline { 
+            margin-bottom: 25px; 
+            line-height: 1.6; 
+            font-size: 15px; 
+        } 
+        
+        .detail-cast, .similar-section, .comments-section { 
+            margin-bottom: 25px; 
+        } 
+        
+        .detail-cast h3, .similar-section h3, .comments-section h3 { 
+            font-size: 18px; 
+            margin-bottom: 15px; 
+            color: var(--text-color); 
+            position: relative; 
+            padding-left: 15px; 
+        } 
+        
+        .detail-cast h3::before, .similar-section h3::before, .comments-section h3::before { 
+            content: ''; 
+            position: absolute; 
+            left: 0; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            width: 5px; 
+            height: 18px; 
+            background-color: var(--primary-color); 
+            border-radius: 3px; 
+        } 
         
         .content-language-badge {
             position: absolute;
@@ -561,7 +984,7 @@
             backdrop-filter: blur(2px);
         }
 
-        /* FIXED: VIDEO PLAYER with proper flex layout */
+        /* VIDEO PLAYER */
         .video-player, .cast-full-view { 
             position: fixed; 
             top: 0; 
@@ -592,7 +1015,7 @@
             background-color: #000;
         }
         
-        /* FIXED: Floating Ad Slots with proper styling */
+        /* FLOATING AD SLOTS */
         .floating-ad-slot {
             flex: 0 0 auto;
             overflow: hidden;
@@ -606,14 +1029,12 @@
             justify-content: center;
         }
         
-        /* Fix for ad network scripts that add position: fixed */
         .floating-ad-slot * {
             position: static !important;
             margin: 0 auto !important;
             max-width: 100% !important;
         }
         
-        /* Hide empty ad slots */
         .floating-ad-slot:empty {
             display: none;
         }
@@ -643,7 +1064,22 @@
         } 
         
         .video-download { display: none; }
-        .back-btn { position: fixed; background: rgba(0,0,0,0.7); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer; top: 15px; left: 15px; display: none; z-index: 1001; }
+        
+        .back-btn { 
+            position: fixed; 
+            background: rgba(0,0,0,0.7); 
+            color: white; 
+            border: none; 
+            width: 40px; 
+            height: 40px; 
+            border-radius: 50%; 
+            font-size: 20px; 
+            cursor: pointer; 
+            top: 15px; 
+            left: 15px; 
+            display: none; 
+            z-index: 1001; 
+        }
         
         /* UPDATED: Bottom Navigation with 5 items */
         .bottom-nav { 
@@ -661,7 +1097,10 @@
             z-index: 500; 
             border-top: 1px solid var(--border-color);
         }
-        body[data-theme="minimal-light"] .bottom-nav { background-color: rgba(255,255,255,0.85); }
+        
+        body[data-theme="minimal-light"] .bottom-nav { 
+            background-color: rgba(255,255,255,0.85); 
+        }
 
         .nav-item { 
             color: var(--secondary-text-color); 
@@ -676,14 +1115,17 @@
             align-items: center;
             padding: 5px 0;
         }
+        
         .nav-item.active, .nav-item:hover { 
             color: var(--primary-color); 
         }
+        
         .nav-item i { 
             font-size: 18px; 
             margin-bottom: 4px;
             transition: all 0.3s ease;
         }
+        
         .nav-item.active i, .nav-item:hover i {
             transform: translateY(-2px);
         }
@@ -701,6 +1143,7 @@
             justify-content: center;
             align-items: center;
         }
+        
         .ad-container {
             position: relative;
             width: 100%;
@@ -710,6 +1153,7 @@
             flex-direction: column;
             background-color: #000;
         }
+        
         .ad-header {
             background-color: #111;
             padding: 15px 20px;
@@ -721,14 +1165,17 @@
             border-bottom: 1px solid var(--border-color);
             position: relative;
         }
+        
         #ad-countdown-text {
             font-size: 16px;
             color: var(--secondary-text-color);
         }
+        
         #ad-countdown {
             font-weight: bold;
             color: var(--primary-color);
         }
+        
         #ad-skip-btn {
             background-color: var(--primary-color);
             color: var(--bg-color);
@@ -740,9 +1187,11 @@
             font-size: 14px;
             display: none;
         }
+        
         #ad-skip-btn.enabled {
             display: block;
         }
+        
         #ad-wait-text {
             position: absolute;
             top: 50%;
@@ -758,6 +1207,7 @@
             padding: 20px;
             border-radius: 10px;
         }
+        
         #ad-iframe {
             width: 100%;
             height: 100%;
@@ -771,16 +1221,19 @@
             z-index: 99999;
             background-color: rgba(0,0,0,0.95);
         }
+        
         #server-maintenance-overlay .modal-content {
             max-width: 350px;
             text-align: center;
             padding: 30px;
         }
+        
         #server-maintenance-overlay .modal-content i {
             font-size: 50px;
             color: var(--primary-color);
             margin-bottom: 20px;
         }
+        
         #maintenance-message {
             color: var(--secondary-text-color);
             line-height: 1.6;
@@ -802,16 +1255,19 @@
             justify-content: center;
             align-items: center;
         }
+        
         .app-lock-container {
             width: 100%;
             max-width: 300px;
             text-align: center;
         }
+        
         #app-lock-title {
             font-size: 22px;
             margin-bottom: 20px;
             color: var(--text-color);
         }
+        
         .pin-display {
             display: flex;
             justify-content: center;
@@ -819,6 +1275,7 @@
             margin-bottom: 30px;
             height: 30px;
         }
+        
         .pin-dot {
             width: 20px;
             height: 20px;
@@ -826,14 +1283,17 @@
             background-color: var(--border-color);
             transition: background-color 0.2s;
         }
+        
         .pin-dot.filled {
             background-color: var(--primary-color);
         }
+        
         .pin-keypad {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
         }
+        
         .keypad-btn {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -846,12 +1306,15 @@
             cursor: pointer;
             transition: background-color 0.2s;
         }
+        
         .keypad-btn:hover {
             background-color: var(--border-color);
         }
+        
         .app-lock-container.shake {
             animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
         }
+        
         @keyframes shake {
             10%, 90% { transform: translate3d(-1px, 0, 0); }
             20%, 80% { transform: translate3d(2px, 0, 0); }
@@ -859,7 +1322,7 @@
             40%, 60% { transform: translate3d(4px, 0, 0); }
         }
 
-        /* UPDATED: Subscription Page Styles - Cleaner Design */
+        /* UPDATED: Subscription Page Styles */
         .subscription-page-container { 
             padding: 0 15px 20px; 
             display: flex; 
@@ -960,7 +1423,7 @@
             color: var(--primary-color);
         }
 
-        /* UPDATED: Checkout Modal - Fixed Scroll Issue */
+        /* UPDATED: Checkout Modal */
         #checkout-modal .modal-content {
             max-width: 400px;
             max-height: 85vh;
@@ -1157,6 +1620,7 @@
             cursor: pointer;
             transition: all 0.2s;
         }
+        
         .id-card-photo-edit:hover { background: var(--primary-color); }
 
         .id-card-photo { font-size: 50px; }
@@ -1188,6 +1652,7 @@
             border-radius: 5px;
             background-color: rgba(255,255,255,0.1);
         }
+        
         .id-card-subscription.GOLD { color: var(--gold-color); border: 1px solid var(--gold-color); }
         .id-card-subscription.PLATINUM { color: var(--platinum-color); border: 1px solid var(--platinum-color); }
         .id-card-subscription.DIAMOND { color: var(--diamond-color); border: 1px solid var(--diamond-color); }
@@ -1200,19 +1665,43 @@
         .validity-label { font-size: 8px; color: var(--secondary-text-color); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px; }
         .validity-timer { font-family: 'Courier New', Courier, monospace; font-size: 18px; font-weight: bold; color: var(--text-color); letter-spacing: 1px; }
         .validity-timer.blinking { animation: blink-animation 1.5s infinite; }
+        
         @keyframes blink-animation {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.3; }
         }
 
         /* --- DISCLAIMER OVERLAY --- */
-        #disclaimer-overlay { z-index: 2001; background-color: rgba(0,0,0,0.9); backdrop-filter: blur(5px); display: none; }
-        #disclaimer-content { max-width: 380px; text-align: center; padding: 25px; }
-        #disclaimer-content h2 { color: var(--primary-color); margin-bottom: 15px; }
-        #disclaimer-content p { font-size: 14px; line-height: 1.6; color: var(--secondary-text-color); margin-bottom: 25px; }
-        #enter-btn { width: 100%; }
+        #disclaimer-overlay { 
+            z-index: 2001; 
+            background-color: rgba(0,0,0,0.9); 
+            backdrop-filter: blur(5px); 
+            display: none; 
+        }
+        
+        #disclaimer-content { 
+            max-width: 380px; 
+            text-align: center; 
+            padding: 25px; 
+        }
+        
+        #disclaimer-content h2 { 
+            color: var(--primary-color); 
+            margin-bottom: 15px; 
+        }
+        
+        #disclaimer-content p { 
+            font-size: 14px; 
+            line-height: 1.6; 
+            color: var(--secondary-text-color); 
+            margin-bottom: 25px; 
+        }
+        
+        #enter-btn { 
+            width: 100%; 
+        }
 
-        /* UPDATED: Poll Styles - Fixed Closing */
+        /* UPDATED: Poll Styles */
         #poll-popup { 
             position: fixed; 
             bottom: 75px; 
@@ -1226,7 +1715,7 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.4); 
             z-index: 1050; 
             overflow: hidden; 
-            display: none; /* Hidden by default */
+            display: none;
         }
         
         #poll-popup.show {
@@ -1311,15 +1800,60 @@
         }
 
         /* --- LIVE TV STYLES --- */
-        .livetv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; padding: 0 15px; }
-        .livetv-card { background-color: var(--card-bg); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 1px solid var(--border-color); }
-        .livetv-card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px var(--shadow-color); border-color: var(--primary-color); }
-        .livetv-card img { width: 80%; max-width: 80px; height: auto; margin-bottom: 10px; object-fit: contain; }
-        .livetv-card-name { font-size: 12px; color: var(--text-color); text-align: center; font-weight: bold; }
+        .livetv-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
+            gap: 15px; 
+            padding: 0 15px; 
+        }
+        
+        .livetv-card { 
+            background-color: var(--card-bg); 
+            border-radius: 8px; 
+            padding: 10px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            transition: transform 0.2s, box-shadow 0.2s; 
+            border: 1px solid var(--border-color); 
+        }
+        
+        .livetv-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 8px 15px var(--shadow-color); 
+            border-color: var(--primary-color); 
+        }
+        
+        .livetv-card img { 
+            width: 80%; 
+            max-width: 80px; 
+            height: auto; 
+            margin-bottom: 10px; 
+            object-fit: contain; 
+        }
+        
+        .livetv-card-name { 
+            font-size: 12px; 
+            color: var(--text-color); 
+            text-align: center; 
+            font-weight: bold; 
+        }
 
         /* --- CONTENT GRID --- */
-        .content-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0 15px; }
-        .placeholder-text { padding: 40px 15px; text-align: center; color: var(--secondary-text-color); }
+        .content-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 12px; 
+            padding: 0 15px; 
+        }
+        
+        .placeholder-text { 
+            padding: 40px 15px; 
+            text-align: center; 
+            color: var(--secondary-text-color); 
+        }
 
         /* --- FLOATING COMPLAINT ICON --- */
         #complaint-fab {
@@ -1341,10 +1875,12 @@
             animation: fab-pulse 2s infinite;
             transition: transform 0.3s;
         }
+        
         #complaint-fab:hover {
             transform: scale(1.1);
             animation-play-state: paused;
         }
+        
         @keyframes fab-pulse {
             0% { box-shadow: 0 0 0 0 rgba(0, 170, 255, 0.7); }
             70% { box-shadow: 0 0 0 10px rgba(0, 170, 255, 0); }
@@ -1771,6 +2307,291 @@
             color: var(--secondary-text-color);
             margin: 0 10px;
         }
+
+        /* =========================== */
+        /* NEW: SEARCH SCREEN STYLES */
+        /* =========================== */
+        
+        #search-page .header {
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        #search-page .header-controls {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 0;
+        }
+        
+        #search-page .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            background-color: rgba(255,255,255,0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            color: var(--text-color);
+            font-size: 16px;
+        }
+        
+        .search-screen-container {
+            padding: 15px;
+        }
+        
+        .search-section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            color: var(--text-color);
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .see-all-link {
+            color: var(--primary-color);
+            font-size: 14px;
+            text-decoration: none;
+            font-weight: normal;
+        }
+        
+        .recent-search-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .recent-search-item:hover {
+            background-color: rgba(255,255,255,0.05);
+            border-color: var(--primary-color);
+        }
+        
+        .recent-search-keyword {
+            color: var(--text-color);
+            font-size: 16px;
+        }
+        
+        .recent-search-delete {
+            color: var(--secondary-text-color);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .recent-search-delete:hover {
+            color: #e50914;
+            background-color: rgba(229, 9, 20, 0.1);
+        }
+        
+        .clear-all-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color);
+            color: var(--secondary-text-color);
+            border-radius: 10px;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .clear-all-btn:hover {
+            background-color: rgba(229, 9, 20, 0.1);
+            color: #e50914;
+            border-color: #e50914;
+        }
+        
+        .search-results-section {
+            margin-top: 25px;
+        }
+        
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .search-result-item:hover {
+            background-color: rgba(255,255,255,0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .search-result-poster {
+            width: 60px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .search-result-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .search-result-info {
+            flex: 1;
+        }
+        
+        .search-result-title {
+            font-weight: bold;
+            color: var(--text-color);
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .search-result-meta {
+            color: var(--secondary-text-color);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .search-result-type {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        
+        .no-results-message {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--secondary-text-color);
+        }
+        
+        .no-results-message i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        /* SEARCH HISTORY MODAL STYLES */
+        #search-history-modal .modal-content {
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .search-history-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .search-history-header h3 {
+            margin: 0;
+            color: var(--text-color);
+        }
+        
+        .search-history-list {
+            padding: 15px;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+        
+        .history-search-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .history-search-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .history-search-keyword {
+            color: var(--text-color);
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .history-search-time {
+            color: var(--secondary-text-color);
+            font-size: 12px;
+        }
+        
+        .history-search-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .history-delete-btn {
+            background: none;
+            border: none;
+            color: var(--secondary-text-color);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .history-delete-btn:hover {
+            color: #e50914;
+            background-color: rgba(229, 9, 20, 0.1);
+        }
+        
+        .clear-history-btn {
+            margin: 15px;
+            width: calc(100% - 30px);
+            padding: 12px;
+            background-color: rgba(229, 9, 20, 0.1);
+            border: 1px solid rgba(229, 9, 20, 0.3);
+            color: #e50914;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .clear-history-btn:hover {
+            background-color: rgba(229, 9, 20, 0.2);
+        }
     </style>
 </head>
 <body data-theme="filmzio-dark">
@@ -1984,7 +2805,7 @@
             </div>
         </div>
 
-        <!-- UPDATED: AD OVERLAY - Now with real ad player -->
+        <!-- AD OVERLAY -->
         <div id="ad-overlay">
             <div class="ad-container">
                 <div class="ad-header">
@@ -1996,7 +2817,7 @@
             </div>
         </div>
 
-        <!-- FIXED: VIDEO PLAYER with proper flex layout -->
+        <!-- VIDEO PLAYER -->
         <div class="video-player" id="video-player">
             <div class="video-controls">
                 <button class="video-close" onclick="closeVideoPlayer()"><i class="fas fa-times"></i></button>
@@ -2027,11 +2848,9 @@
                             <span>LIVE</span>
                         </div>
                     </div>
+                    <!-- UPDATED: Profile icon removed, search bar larger -->
                     <div class="header-controls">
-                        <input type="text" class="search-input" id="search-input" placeholder="Search movies..." onkeyup="handleGlobalSearch(event)">
-                        <div class="user-profile" onclick="navigateTo('profile-page')">
-                            <i class="fas fa-user"></i>
-                        </div>
+                        <input type="text" class="search-input" id="search-input" placeholder="Search movies..." onclick="openSearchScreen()" readonly>
                     </div>
                 </div>
 
@@ -2046,6 +2865,50 @@
 
                 <div id="categories-container">
                     <!-- Categories will be loaded here -->
+                </div>
+            </div>
+
+            <!-- NEW: SEARCH SCREEN -->
+            <div id="search-page" class="page">
+                <div class="header">
+                    <div class="logo-container">
+                        <button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i></button>
+                        <div class="logo">Search</div>
+                    </div>
+                    <div class="header-controls">
+                        <input type="text" class="search-input" id="search-screen-input" placeholder="Search movies, series, videos..." onkeyup="handleSearchScreenSearch(event)" autofocus>
+                        <i class="fas fa-search" style="color: var(--text-color);"></i>
+                    </div>
+                </div>
+
+                <div class="search-screen-container">
+                    <!-- Recent Searches Section -->
+                    <div id="recent-searches-section" style="display: none;">
+                        <div class="search-section-title">
+                            <span>Recent</span>
+                            <a href="#" class="see-all-link" onclick="openSearchHistoryModal()">See all</a>
+                        </div>
+                        <div id="recent-searches-list">
+                            <!-- Recent searches will be loaded here -->
+                        </div>
+                        <button class="clear-all-btn" onclick="clearRecentSearches()">Clear All</button>
+                    </div>
+
+                    <!-- Search Results Section -->
+                    <div id="search-results-section" class="search-results-section" style="display: none;">
+                        <div class="search-section-title">
+                            <span id="search-results-title">Search Results</span>
+                        </div>
+                        <div id="search-results-list">
+                            <!-- Search results will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- No Results Message -->
+                    <div id="no-recent-searches" class="no-results-message" style="display: none;">
+                        <i class="fas fa-search"></i>
+                        <p>No recent searches</p>
+                    </div>
                 </div>
             </div>
 
@@ -2182,7 +3045,7 @@
                 </div>
             </div>
 
-            <!-- UPDATED: SUBSCRIPTION PAGE - 100% DYNAMIC -->
+            <!-- SUBSCRIPTION PAGE -->
             <div id="subscription-page" class="page">
                 <div class="header">
                     <div class="logo-container">
@@ -2279,7 +3142,7 @@
                     </div>
                 </div>
                 
-                <!-- NEW: Main Description Section -->
+                <!-- Main Description Section -->
                 <div class="main-description-section" id="main-description-section" style="display: none;">
                     <div class="main-description-container">
                         <div class="main-description-title">Story / Notice / Information</div>
@@ -2289,7 +3152,7 @@
                     </div>
                 </div>
                 
-                <!-- NEW: Action Links Section -->
+                <!-- Action Links Section -->
                 <div class="action-links-section" id="action-links-section" style="display: none;">
                     <div class="action-links-title">Action Links</div>
                     <div id="action-links-container">
@@ -2368,7 +3231,7 @@
                 </div>
             </div>
 
-            <!-- NEW: NOTIFICATIONS PAGE -->
+            <!-- NOTIFICATIONS PAGE -->
             <div id="notifications-page" class="page">
                 <div class="header">
                     <div class="logo-container">
@@ -2399,7 +3262,7 @@
             </div>
         </main>
 
-        <!-- UPDATED: BOTTOM NAVIGATION with 5 items -->
+        <!-- BOTTOM NAVIGATION -->
         <nav class="bottom-nav" id="bottom-nav">
             <div class="nav-item active" onclick="navigateTo('home-page')">
                 <i class="fas fa-home"></i>
@@ -2511,7 +3374,7 @@
             </div>
         </div>
 
-        <!-- UPDATED: Checkout Modal - Fixed Design -->
+        <!-- Checkout Modal -->
         <div class="modal-overlay" id="checkout-modal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -2536,7 +3399,6 @@
                             <input type="text" id="transaction-id" placeholder="Enter the transaction ID from your app" required>
                         </div>
                         
-                        <!-- FIXED: Changed from UTR ID to Payment Number (Required) -->
                         <div class="checkout-form-group">
                             <label>Payment Number <span style="color: #e50914;">*</span></label>
                             <input type="tel" 
@@ -2568,7 +3430,21 @@
             </div>
         </div>
 
-        <!-- UPDATED: Poll Modal - Now closable -->
+        <!-- NEW: Search History Modal -->
+        <div class="modal-overlay" id="search-history-modal">
+            <div class="modal-content">
+                <div class="search-history-header">
+                    <h3>Search History</h3>
+                    <button class="modal-close" onclick="closeModal('search-history-modal')">&times;</button>
+                </div>
+                <div class="search-history-list" id="search-history-list">
+                    <!-- Search history items will be loaded here -->
+                </div>
+                <button class="clear-history-btn" onclick="clearAllSearchHistory()">Clear All History</button>
+            </div>
+        </div>
+
+        <!-- Poll Modal -->
         <div id="poll-popup">
             <div id="poll-header">
                 <i class="fas fa-poll"></i> Quick Poll
@@ -2587,7 +3463,7 @@
             </div>
         </div>
 
-        <!-- Search Results Modal -->
+        <!-- Search Results Modal (for other pages) -->
         <div class="modal-overlay" id="search-results-modal">
             <div class="modal-content" style="max-width: 95%; max-height: 85vh;">
                 <div class="modal-header" style="padding: 15px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
@@ -2604,7 +3480,7 @@
     </div>
 
     <script>
-        // Firebase Configuration (same as admin panel)
+        // Firebase Configuration
         const firebaseConfig = {
           apiKey: "AIzaSyCeCIZBgVa3KaKTF6v4jfgavVupxGo33Rg",
           authDomain: "movie-box-bd-8e17b.firebaseapp.com",
@@ -2637,16 +3513,12 @@
         let pollShown = false;
         let enteredPin = '';
         let userNotifications = [];
-        
-        // 🔴 NEW: Real-time content listener variable
         let currentContentListener = null;
-        
-        // FIXED: COMPLETE AD SYSTEM VARIABLES
         let adInterval = null;
         let currentAdInterval = 0;
         let adCountdownInterval = null;
         
-        // Ad settings - will be loaded from Firestore admin panel
+        // Ad settings
         let adsSettings = {
             enabled: false,
             adUrl: "",
@@ -2660,24 +3532,26 @@
             }
         };
         
-        // NEW: Floating banner ad settings
+        // Floating banner ad settings
         let floatingAdsSettings = {
-            enabled: false,              // Admin থেকে on/off
-            topScript: "",               // উপরের ফ্লোটিং এডের script কোড
-            bottomScript: "",            // নিচের ফ্লোটিং এডের script কোড
-            showIn: {                    // কোন টাইপ কন্টেন্টে দেখাব
+            enabled: false,
+            topScript: "",
+            bottomScript: "",
+            showIn: {
                 movies: true,
                 series: true,
-                livetv: false            // ডিফল্টে live tv তে না, চাইলে পরে true
+                livetv: false
             }
         };
         
-        // NEW: এখন কোন টাইপ কনটেন্ট প্লে হচ্ছে, এটা ধরে রাখবো
         let currentPlayingType = 'movie';
-        
         let isPremiumUser = false;
         let userPlan = { name: 'FREE', expiresAt: null };
-        let pendingStreamUrl = null; // Store stream URL while ad is playing
+        let pendingStreamUrl = null;
+
+        // NEW: Search variables
+        let userSearchHistory = [];
+        let currentSearchQuery = '';
 
         // === INITIALIZATION ===
         document.addEventListener('DOMContentLoaded', () => {
@@ -2687,7 +3561,6 @@
             setupPasswordToggles();
             setupAuthStateListener();
             
-            // Hide loading screen after 2 seconds (fallback)
             setTimeout(() => {
                 if (document.getElementById('loading-screen').style.display !== 'none') {
                     document.getElementById('loading-screen').style.display = 'none';
@@ -2719,14 +3592,11 @@
                         ...userDoc.data() 
                     };
                     
-                    // Check user plan
                     checkUserPlan();
-                    
-                    // Load user notifications
                     loadUserNotifications();
+                    loadUserSearchHistory(); // NEW: Load search history
                     
                 } else {
-                    // ✅ FIXED: Signup সমস্যা - নতুন user create করার জন্য Firebase Rules compatible data
                     const userData = {
                         name: firebaseUser.displayName || firebaseUser.email.split('@')[0],
                         email: firebaseUser.email,
@@ -2741,18 +3611,15 @@
                         subscriptionExpiry: null
                     };
                     
-                    // ✅ FIXED: Firestore rules compatible create
                     try {
                         await db.collection('users').doc(firebaseUser.uid).set(userData);
                         currentUser = { uid: firebaseUser.uid, ...userData };
                         userPlan = { name: 'FREE', expiresAt: null };
                         isPremiumUser = false;
                         
-                        // ✅ User profile update
                         await firebaseUser.updateProfile({ displayName: userData.name });
                     } catch (error) {
                         console.error('Error creating user document:', error);
-                        // Retry with simplified data if first attempt fails
                         const simplifiedUserData = {
                             name: userData.name,
                             email: userData.email,
@@ -2783,24 +3650,20 @@
             
             const now = new Date().getTime();
             
-            // Check if user has active subscription
             if (currentUser.subscription && currentUser.subscription.expiresAt) {
                 const expiryTime = currentUser.subscription.expiresAt;
                 
                 if (expiryTime > now) {
-                    // Active subscription
                     userPlan = {
                         name: currentUser.subscription.planName || 'GOLD',
                         expiresAt: expiryTime
                     };
                     isPremiumUser = true;
                 } else {
-                    // Subscription expired
                     userPlan = { name: 'FREE', expiresAt: null };
                     isPremiumUser = false;
                 }
             } else {
-                // No subscription
                 userPlan = { name: 'FREE', expiresAt: null };
                 isPremiumUser = false;
             }
@@ -2936,12 +3799,9 @@
             buttonText.innerHTML = '<span class="loading-spinner"></span> Creating account...';
             
             try {
-                // ✅ FIXED: Firestore rules compatible signup - NO duplicate checks that require read permissions
-                // Create user in Firebase Auth first
                 const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 const user = userCredential.user;
                 
-                // ✅ Firestore rules compatible user data (must match rules validation)
                 const userData = {
                     name: username,
                     email: email,
@@ -2956,13 +3816,8 @@
                     subscriptionExpiry: null
                 };
                 
-                // ✅ Create user document in Firestore (this should work with your rules)
                 await db.collection('users').doc(user.uid).set(userData);
-                
-                // Update user profile
                 await user.updateProfile({ displayName: username });
-                
-                // ✅ Success - user will be auto-logged in via auth state listener
                 
             } catch (error) {
                 console.error('Signup error:', error);
@@ -3071,7 +3926,6 @@
                     clearInterval(adCountdownInterval);
                 }
                 
-                // 🔴 Remove real-time content listener
                 removeCurrentContentListener();
                 
                 auth.signOut().then(() => {
@@ -3098,7 +3952,6 @@
                     appSettings = doc.data();
                     console.log('App settings loaded:', appSettings);
                     
-                    // Apply maintenance mode
                     if (appSettings.serverManagement && appSettings.serverManagement.status === 'MAINTENANCE') {
                         document.getElementById('maintenance-title').textContent = 
                             appSettings.serverManagement.message || 'Under Maintenance';
@@ -3109,7 +3962,6 @@
                         document.getElementById('server-maintenance-overlay').style.display = 'none';
                     }
                     
-                    // Apply live status
                     if (appSettings.liveStatus) {
                         const liveIndicator = document.getElementById('live-indicator');
                         if (liveIndicator) {
@@ -3117,7 +3969,6 @@
                         }
                     }
                     
-                    // Apply adult content visibility
                     if (appSettings.adultVisible !== undefined) {
                         window.adultVisible = appSettings.adultVisible;
                         if (!appSettings.adultVisible) {
@@ -3125,12 +3976,10 @@
                         }
                     }
                     
-                    // Apply age verification
                     if (appSettings.ageVerification !== undefined) {
                         window.ageVerificationEnabled = appSettings.ageVerification;
                     }
                     
-                    // FIXED: Load COMPLETE ads settings from Firestore
                     if (appSettings.ads) {
                         adsSettings = {
                             enabled: appSettings.ads.enabled || false,
@@ -3147,7 +3996,6 @@
                         
                         console.log('Ads settings loaded:', adsSettings);
                         
-                        // NEW: Load floating ads settings from Firestore
                         floatingAdsSettings.enabled = !!appSettings.ads.floatingEnabled;
                         floatingAdsSettings.topScript = appSettings.ads.floatingTopScript || "";
                         floatingAdsSettings.bottomScript = appSettings.ads.floatingBottomScript || "";
@@ -3156,7 +4004,6 @@
                         console.log('Floating ads settings loaded:', floatingAdsSettings);
                     }
                     
-                    // Update app name if available
                     if (appSettings.logoText) {
                         const logos = document.querySelectorAll('.logo');
                         logos.forEach(logo => {
@@ -3167,9 +4014,442 @@
             });
         }
 
+        // === NEW: SEARCH SYSTEM FUNCTIONS ===
+        
+        // 1. Open Search Screen
+        function openSearchScreen() {
+            navigateTo('search-page');
+            loadRecentSearches();
+            
+            // Focus on search input after page transition
+            setTimeout(() => {
+                const searchInput = document.getElementById('search-screen-input');
+                if (searchInput) {
+                    searchInput.focus();
+                }
+            }, 300);
+        }
+        
+        // 2. Handle Search in Search Screen
+        function handleSearchScreenSearch(event) {
+            const keyword = event.target.value.trim();
+            currentSearchQuery = keyword;
+            
+            if (keyword.length === 0) {
+                // Hide results, show recent searches
+                document.getElementById('search-results-section').style.display = 'none';
+                document.getElementById('recent-searches-section').style.display = 'block';
+                document.getElementById('no-recent-searches').style.display = userSearchHistory.length === 0 ? 'block' : 'none';
+                return;
+            }
+            
+            // Save search keyword
+            saveSearchKeyword(keyword);
+            
+            // Perform search
+            performGlobalSearchForScreen(keyword);
+            
+            // Show results section
+            document.getElementById('recent-searches-section').style.display = 'none';
+            document.getElementById('no-recent-searches').style.display = 'none';
+            document.getElementById('search-results-section').style.display = 'block';
+            document.getElementById('search-results-title').textContent = `Search Results for "${keyword}"`;
+        }
+        
+        // 3. Save Search Keyword to Firestore
+        async function saveSearchKeyword(keyword) {
+            if (!currentUser || !keyword || keyword.trim() === '') return;
+            
+            try {
+                // Check if keyword already exists in recent history
+                const existingIndex = userSearchHistory.findIndex(item => 
+                    item.keyword.toLowerCase() === keyword.toLowerCase());
+                
+                if (existingIndex !== -1) {
+                    // Remove existing entry to avoid duplicates
+                    userSearchHistory.splice(existingIndex, 1);
+                }
+                
+                // Add new entry at the beginning
+                const searchEntry = {
+                    keyword: keyword,
+                    searchedAt: new Date().getTime(),
+                    id: Date.now().toString()
+                };
+                
+                userSearchHistory.unshift(searchEntry);
+                
+                // Keep only last 20 searches in memory
+                if (userSearchHistory.length > 20) {
+                    userSearchHistory = userSearchHistory.slice(0, 20);
+                }
+                
+                // Save to Firestore
+                await db.collection('users').doc(currentUser.uid).collection('searchHistory').add({
+                    keyword: keyword,
+                    searchedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    timestamp: new Date().getTime()
+                });
+                
+                // Update UI
+                updateRecentSearchesUI();
+                
+            } catch (error) {
+                console.error('Error saving search keyword:', error);
+            }
+        }
+        
+        // 4. Load User Search History
+        async function loadUserSearchHistory() {
+            if (!currentUser) return;
+            
+            try {
+                const snapshot = await db.collection('users').doc(currentUser.uid)
+                    .collection('searchHistory')
+                    .orderBy('searchedAt', 'desc')
+                    .limit(20)
+                    .get();
+                
+                userSearchHistory = [];
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    userSearchHistory.push({
+                        id: doc.id,
+                        keyword: data.keyword,
+                        searchedAt: data.timestamp || data.searchedAt?.toDate?.().getTime() || new Date().getTime()
+                    });
+                });
+                
+                updateRecentSearchesUI();
+                
+            } catch (error) {
+                console.error('Error loading search history:', error);
+            }
+        }
+        
+        // 5. Update Recent Searches UI
+        function updateRecentSearchesUI() {
+            const recentSearchesList = document.getElementById('recent-searches-list');
+            const recentSection = document.getElementById('recent-searches-section');
+            const noRecentDiv = document.getElementById('no-recent-searches');
+            
+            if (!recentSearchesList || !recentSection || !noRecentDiv) return;
+            
+            if (userSearchHistory.length === 0) {
+                recentSection.style.display = 'none';
+                noRecentDiv.style.display = 'block';
+                return;
+            }
+            
+            recentSection.style.display = 'block';
+            noRecentDiv.style.display = 'none';
+            
+            // Show only last 10 searches in recent section
+            const recentToShow = userSearchHistory.slice(0, 10);
+            
+            let html = '';
+            recentToShow.forEach(item => {
+                html += `
+                    <div class="recent-search-item" onclick="performSearchFromHistory('${item.keyword.replace(/'/g, "\\'")}')">
+                        <div class="recent-search-keyword">${item.keyword}</div>
+                        <button class="recent-search-delete" onclick="deleteSearchHistoryItem('${item.id}', event)">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+            });
+            
+            recentSearchesList.innerHTML = html;
+        }
+        
+        // 6. Perform Search from History
+        function performSearchFromHistory(keyword) {
+            const searchInput = document.getElementById('search-screen-input');
+            if (searchInput) {
+                searchInput.value = keyword;
+                searchInput.focus();
+                
+                // Trigger search
+                const event = new Event('keyup');
+                searchInput.dispatchEvent(event);
+            }
+        }
+        
+        // 7. Delete Single Search History Item
+        async function deleteSearchHistoryItem(itemId, event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            
+            if (!currentUser) return;
+            
+            try {
+                // Remove from Firestore
+                await db.collection('users').doc(currentUser.uid)
+                    .collection('searchHistory')
+                    .doc(itemId)
+                    .delete();
+                
+                // Remove from local array
+                const index = userSearchHistory.findIndex(item => item.id === itemId);
+                if (index !== -1) {
+                    userSearchHistory.splice(index, 1);
+                }
+                
+                // Update UI
+                updateRecentSearchesUI();
+                
+                // If in search history modal, update that too
+                if (document.getElementById('search-history-modal').style.display === 'flex') {
+                    loadFullSearchHistory();
+                }
+                
+            } catch (error) {
+                console.error('Error deleting search history item:', error);
+            }
+        }
+        
+        // 8. Clear Recent Searches
+        async function clearRecentSearches() {
+            if (!currentUser || userSearchHistory.length === 0) return;
+            
+            if (confirm('Are you sure you want to clear all recent searches?')) {
+                try {
+                    // Get all recent search documents
+                    const snapshot = await db.collection('users').doc(currentUser.uid)
+                        .collection('searchHistory')
+                        .get();
+                    
+                    // Delete in batch
+                    const batch = db.batch();
+                    snapshot.forEach(doc => {
+                        batch.delete(doc.ref);
+                    });
+                    
+                    await batch.commit();
+                    
+                    // Clear local array
+                    userSearchHistory = [];
+                    
+                    // Update UI
+                    updateRecentSearchesUI();
+                    
+                    showToast('Cleared', 'Recent searches cleared successfully');
+                    
+                } catch (error) {
+                    console.error('Error clearing recent searches:', error);
+                    alert('Failed to clear recent searches. Please try again.');
+                }
+            }
+        }
+        
+        // 9. Clear All Search History
+        async function clearAllSearchHistory() {
+            if (!currentUser) return;
+            
+            if (confirm('Are you sure you want to clear all search history? This action cannot be undone.')) {
+                try {
+                    // Get all search history documents
+                    const snapshot = await db.collection('users').doc(currentUser.uid)
+                        .collection('searchHistory')
+                        .get();
+                    
+                    // Delete in batch
+                    const batch = db.batch();
+                    snapshot.forEach(doc => {
+                        batch.delete(doc.ref);
+                    });
+                    
+                    await batch.commit();
+                    
+                    // Clear local array
+                    userSearchHistory = [];
+                    
+                    // Update UI
+                    updateRecentSearchesUI();
+                    
+                    // Close modal if open
+                    closeModal('search-history-modal');
+                    
+                    showToast('Cleared', 'All search history cleared successfully');
+                    
+                } catch (error) {
+                    console.error('Error clearing search history:', error);
+                    alert('Failed to clear search history. Please try again.');
+                }
+            }
+        }
+        
+        // 10. Open Search History Modal
+        async function openSearchHistoryModal() {
+            await loadFullSearchHistory();
+            openModal('search-history-modal');
+        }
+        
+        // 11. Load Full Search History for Modal
+        async function loadFullSearchHistory() {
+            if (!currentUser) return;
+            
+            try {
+                const snapshot = await db.collection('users').doc(currentUser.uid)
+                    .collection('searchHistory')
+                    .orderBy('searchedAt', 'desc')
+                    .get();
+                
+                const historyList = document.getElementById('search-history-list');
+                if (!historyList) return;
+                
+                if (snapshot.empty) {
+                    historyList.innerHTML = `
+                        <div class="no-results-message">
+                            <i class="fas fa-search"></i>
+                            <p>No search history found</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let html = '';
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const searchDate = data.searchedAt?.toDate ? data.searchedAt.toDate() : new Date(data.timestamp || Date.now());
+                    const timeAgo = formatTimeAgo(searchDate);
+                    
+                    html += `
+                        <div class="history-search-item">
+                            <div class="history-search-info">
+                                <div class="history-search-keyword">${data.keyword}</div>
+                                <div class="history-search-time">${timeAgo}</div>
+                            </div>
+                            <div class="history-search-actions">
+                                <button class="history-delete-btn" onclick="deleteSearchHistoryItem('${doc.id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                historyList.innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error loading full search history:', error);
+                const historyList = document.getElementById('search-history-list');
+                if (historyList) {
+                    historyList.innerHTML = `
+                        <div class="no-results-message">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>Error loading search history</p>
+                        </div>
+                    `;
+                }
+            }
+        }
+        
+        // 12. Perform Global Search for Search Screen
+        function performGlobalSearchForScreen(keyword) {
+            if (!keyword || keyword.trim() === '') {
+                document.getElementById('search-results-list').innerHTML = `
+                    <div class="no-results-message">
+                        <i class="fas fa-search"></i>
+                        <p>Enter a keyword to search</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Combine all content
+            const allContent = [
+                ...allMovies.map(item => ({ ...item, type: 'movie', searchType: 'movie' })),
+                ...allSeries.map(item => ({ ...item, type: 'series', searchType: 'series' })),
+                ...allLiveTV.map(item => ({ ...item, type: 'livetv', searchType: 'livetv', title: item.name }))
+            ];
+            
+            const keywordLower = keyword.toLowerCase();
+            
+            // Filter content by keyword (case-insensitive, anywhere in title, category, or name)
+            const filteredContent = allContent.filter(item => {
+                const title = (item.title || item.name || '').toLowerCase();
+                const category = (item.category || '').toLowerCase();
+                const language = (item.language || '').toLowerCase();
+                const description = (item.description || '').toLowerCase();
+                
+                return (
+                    title.includes(keywordLower) ||
+                    category.includes(keywordLower) ||
+                    language.includes(keywordLower) ||
+                    description.includes(keywordLower)
+                );
+            });
+            
+            // Sort by order (descending) - newest first
+            filteredContent.sort((a, b) => {
+                const orderA = Number(a.order) || 999;
+                const orderB = Number(b.order) || 999;
+                return orderA - orderB; // Ascending order
+            });
+            
+            const resultsList = document.getElementById('search-results-list');
+            
+            if (filteredContent.length === 0) {
+                resultsList.innerHTML = `
+                    <div class="no-results-message">
+                        <i class="fas fa-search"></i>
+                        <p>No results found for "${keyword}"</p>
+                        <p style="font-size: 14px; margin-top: 10px;">Try different keywords</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            filteredContent.forEach(item => {
+                const typeLabel = item.searchType === 'movie' ? 'Movie' : 
+                                 item.searchType === 'series' ? 'Series' : 'Live TV';
+                
+                html += `
+                    <div class="search-result-item" onclick="showSearchResultDetail('${item.id}', '${item.searchType}')">
+                        <div class="search-result-poster">
+                            <img src="${item.poster || item.logo || 'https://via.placeholder.com/60x80'}" alt="${item.title || item.name}">
+                        </div>
+                        <div class="search-result-info">
+                            <div class="search-result-title">${item.title || item.name}</div>
+                            <div class="search-result-meta">
+                                <span class="search-result-type">${typeLabel}</span>
+                                <span>${item.category || 'Unknown'}</span>
+                                ${item.year ? `<span>${item.year}</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            resultsList.innerHTML = html;
+        }
+        
+        // 13. Show Search Result Detail
+        function showSearchResultDetail(contentId, type) {
+            // First go back to home page
+            navigateTo('home-page');
+            
+            // Then show the detail
+            setTimeout(() => {
+                showDetail(contentId, type);
+            }, 300);
+        }
+        
+        // 14. Load Recent Searches
+        function loadRecentSearches() {
+            if (userSearchHistory.length > 0) {
+                updateRecentSearchesUI();
+            } else {
+                loadUserSearchHistory();
+            }
+        }
+
         // === CONTENT LOADING FUNCTIONS ===
         function loadContent() {
-            // Load movies - NO LIMIT
+            // Load movies
             db.collection('movies').orderBy('order', 'asc').onSnapshot((snapshot) => {
                 allMovies = [];
                 snapshot.forEach(doc => {
@@ -3185,7 +4465,7 @@
                 showMoviesErrorState();
             });
             
-            // Load web series - NO LIMIT
+            // Load web series
             db.collection('webseries').orderBy('order', 'asc').onSnapshot((snapshot) => {
                 allSeries = [];
                 snapshot.forEach(doc => {
@@ -3194,8 +4474,11 @@
                 });
             });
             
-            // Load categories
-            db.collection('categories').where('visible', '==', true).onSnapshot((snapshot) => {
+            // Load categories - FIXED: Added .orderBy('order', 'asc') here
+            db.collection('categories')
+                .where('visible', '==', true)
+                .orderBy('order', 'asc')  // 🔥 THIS IS THE FIX - Added orderBy
+                .onSnapshot((snapshot) => {
                 allCategories = [];
                 snapshot.forEach(doc => {
                     const category = { id: doc.id, ...doc.data() };
@@ -3216,31 +4499,28 @@
             loadLiveTvChannels();
         }
 
-        // NEW: Dynamic Plan Loading System
+        // Dynamic Plan Loading System
         function loadPlans() {
             db.collection('plans').onSnapshot((snapshot) => {
                 allPlans = {};
                 snapshot.forEach(doc => {
                     const planData = doc.data();
-                    // Use the plan name field or document ID as key
                     const planKey = (planData.name || doc.id).toUpperCase();
                     allPlans[planKey] = { 
                         id: doc.id, 
                         ...planData,
-                        // Ensure all required fields have defaults
                         name: planData.name || doc.id,
                         rate: planData.rate || 0,
                         validityDays: planData.validityDays || 30,
                         features: planData.features || [],
                         qrUrl: planData.qrUrl || '',
-                        isActive: planData.isActive !== false, // Default to true
+                        isActive: planData.isActive !== false,
                         sortOrder: planData.sortOrder || 999
                     };
                 });
                 
                 console.log('Plans loaded:', allPlans);
                 
-                // Update subscription page if active
                 if (document.querySelector('#subscription-page').classList.contains('active')) {
                     renderSubscriptionPlans();
                 }
@@ -3250,23 +4530,17 @@
             });
         }
 
-        // NEW: Render Subscription Plans Dynamically
+        // Render Subscription Plans Dynamically
         function renderSubscriptionPlans() {
             const loadingState = document.getElementById('plans-loading-state');
             const emptyState = document.getElementById('plans-empty-state');
             const successState = document.getElementById('plans-success-state');
             const plansContainer = document.getElementById('plans-success-state');
             
-            // Convert allPlans object to array
             const plansArray = Object.values(allPlans);
-            
-            // Filter active plans
             const activePlans = plansArray.filter(plan => plan.isActive !== false);
-            
-            // Sort by sortOrder
             activePlans.sort((a, b) => (a.sortOrder || 999) - (b.sortOrder || 999));
             
-            // Update UI states
             if (activePlans.length === 0) {
                 loadingState.style.display = 'none';
                 emptyState.style.display = 'block';
@@ -3278,17 +4552,14 @@
             emptyState.style.display = 'none';
             successState.style.display = 'block';
             
-            // Clear previous content
             plansContainer.innerHTML = '';
             
-            // Render each plan
             activePlans.forEach(plan => {
                 const planNameUpper = plan.name.toUpperCase();
                 const planCard = document.createElement('div');
                 planCard.className = `plan-card ${planNameUpper}`;
                 planCard.onclick = () => openCheckoutModal(planNameUpper);
                 
-                // Get CSS color class based on plan name
                 let colorClass = 'OTHER';
                 if (planNameUpper.includes('GOLD')) colorClass = 'GOLD';
                 else if (planNameUpper.includes('PLATINUM')) colorClass = 'PLATINUM';
@@ -3296,7 +4567,6 @@
                 else if (planNameUpper.includes('SILVER')) colorClass = 'SILVER';
                 else if (planNameUpper.includes('BRONZE')) colorClass = 'BRONZE';
                 
-                // Build features HTML
                 let featuresHTML = '';
                 if (plan.features && Array.isArray(plan.features)) {
                     featuresHTML = plan.features.map(feature => 
@@ -3333,18 +4603,16 @@
             successState.style.display = 'none';
         }
 
-        // Load movie categories for Movies page with proper state handling
+        // Load movie categories for Movies page
         function loadMoviesCategories() {
             const container = document.getElementById('movies-categories-container');
             
-            // Show loading state
             document.getElementById('movies-loading-state').style.display = 'block';
             document.getElementById('movies-empty-state').style.display = 'none';
             document.getElementById('movies-error-state').style.display = 'none';
             document.getElementById('movies-success-state').style.display = 'none';
             
             if (allCategories.length === 0) {
-                // No categories - show empty state
                 setTimeout(() => {
                     document.getElementById('movies-loading-state').style.display = 'none';
                     document.getElementById('movies-empty-state').style.display = 'block';
@@ -3355,6 +4623,13 @@
             setTimeout(() => {
                 let html = '<div class="movies-category-grid">';
                 const movieCategories = allCategories.filter(cat => cat.type === 'movie' || !cat.type);
+                
+                // Additional client-side sorting for safety
+                movieCategories.sort((a, b) => {
+                    const orderA = Number(a.order) || 999;
+                    const orderB = Number(b.order) || 999;
+                    return orderA - orderB;
+                });
                 
                 if (movieCategories.length === 0) {
                     document.getElementById('movies-loading-state').style.display = 'none';
@@ -3389,11 +4664,8 @@
         }
 
         function showMoviesByCategory(categoryName) {
-            // Filter movies by category
             const filteredMovies = allMovies.filter(movie => movie.category === categoryName);
             
-            // ✅ FIXED: Category-wise order sorting - Strict by order field
-            // Sort by numeric order field (ascending)
             filteredMovies.sort((a, b) => {
                 const orderA = Number(a.order) || 999;
                 const orderB = Number(b.order) || 999;
@@ -3405,7 +4677,6 @@
                 return;
             }
             
-            // Create a grid view for movies in this category
             let html = `<div style="padding: 15px;">
                 <h3 style="margin-bottom: 15px; color: var(--text-color);">${categoryName} Movies (${filteredMovies.length})</h3>
                 <div class="content-grid">`;
@@ -3424,7 +4695,6 @@
             
             html += '</div></div>';
             
-            // Create a temporary modal to show movies
             const modal = document.createElement('div');
             modal.className = 'modal-overlay';
             modal.style.display = 'flex';
@@ -3442,7 +4712,6 @@
             
             document.body.appendChild(modal);
             
-            // Close modal when clicking outside
             modal.addEventListener('click', function(e) {
                 if (e.target === modal) {
                     modal.style.display = 'none';
@@ -3460,7 +4729,6 @@
                     const channel = { id: doc.id, ...doc.data() };
                     allLiveTV.push(channel);
                     
-                    // Check if channel is in maintenance
                     if (channel.maintenance) {
                         html += `
                             <div class="livetv-card" style="opacity: 0.5;" onclick="showChannelMaintenance('${channel.name}')">
@@ -3487,7 +4755,7 @@
             });
         }
 
-        // FIXED: Slider banner now clickable and navigates to movie details
+        // FIXED: Slider banner now clickable
         function renderFeaturedSlider() {
             const featured = [...allMovies, ...allSeries].slice(0, 5);
             const slider = document.getElementById('featured-slider');
@@ -3517,7 +4785,6 @@
                     </div>
                 `;
                 
-                // Add click event to slide
                 slide.addEventListener('click', function() {
                     const contentId = this.dataset.contentId;
                     const contentType = this.dataset.contentType;
@@ -3531,7 +4798,6 @@
                 `;
             });
             
-            // Start slider
             if (sliderInterval) clearInterval(sliderInterval);
             if (featured.length > 1) {
                 sliderInterval = setInterval(nextSlide, 5000);
@@ -3542,13 +4808,11 @@
             const container = document.getElementById('categories-container');
             container.innerHTML = '';
             
-            // Filter adult content if disabled
             let filteredMovies = [...allMovies];
             if (!window.adultVisible) {
                 filteredMovies = filteredMovies.filter(item => !item.isAdult);
             }
             
-            // Group by category
             const categories = {};
             filteredMovies.forEach(item => {
                 if (item.category) {
@@ -3559,12 +4823,18 @@
                 }
             });
             
-            // Render categories
-            Object.keys(categories).forEach(category => {
+            // Sort categories by order from allCategories array
+            const sortedCategoryNames = Object.keys(categories).sort((a, b) => {
+                const catA = allCategories.find(cat => cat.name === a);
+                const catB = allCategories.find(cat => cat.name === b);
+                const orderA = catA ? (catA.order || 999) : 999;
+                const orderB = catB ? (catB.order || 999) : 999;
+                return orderA - orderB;
+            });
+            
+            sortedCategoryNames.forEach(category => {
                 const items = categories[category];
                 
-                // ✅ FIXED: Category-wise order sorting - Strict by order field
-                // Sort by numeric order field (ascending)
                 items.sort((a, b) => {
                     const orderA = Number(a.order) || 999;
                     const orderB = Number(b.order) || 999;
@@ -3635,15 +4905,12 @@
                 indicator.classList.toggle('active', i === currentSlide);
             });
             
-            // Reset timer
             if (sliderInterval) clearInterval(sliderInterval);
             sliderInterval = setInterval(nextSlide, 5000);
         }
 
         // === CONTENT DETAILS ===
-        // 🔴 **FIXED: COMPLETE Real-time Description Update + Action Links System**
         async function showDetail(contentId, type = 'movie') {
-            // Remove previous listener
             removeCurrentContentListener();
             
             let content;
@@ -3658,24 +4925,18 @@
             currentContent = content;
             navigateTo('detail-page');
             
-            // First load: Show cached content immediately
             updateDetailUI(content);
-            
-            // 🔴 SETUP REAL-TIME LISTENER for live updates
             setupContentListener(contentId, type);
         }
 
-        // 🔴 NEW: Real-time content listener setup
         function setupContentListener(contentId, type) {
             const collectionName = type === 'movie' ? 'movies' : 'webseries';
             const docRef = db.collection(collectionName).doc(contentId);
             
-            // Set up real-time listener
             currentContentListener = docRef.onSnapshot((doc) => {
                 if (doc.exists) {
                     const updatedContent = { id: doc.id, ...doc.data() };
                     
-                    // Update local arrays
                     if (type === 'movie') {
                         const index = allMovies.findIndex(item => item.id === contentId);
                         if (index !== -1) {
@@ -3688,10 +4949,7 @@
                         }
                     }
                     
-                    // Update current content
                     currentContent = updatedContent;
-                    
-                    // Update UI with new data
                     updateDetailUI(updatedContent);
                     
                     console.log('Content updated in real-time:', updatedContent.title);
@@ -3701,26 +4959,21 @@
             });
         }
 
-        // 🔴 NEW: Remove current content listener
         function removeCurrentContentListener() {
             if (currentContentListener) {
-                currentContentListener(); // Unsubscribe
+                currentContentListener();
                 currentContentListener = null;
             }
         }
 
-        // 🔴 UPDATED: Detail UI Update function (includes description and action links)
         async function updateDetailUI(content) {
-            // Update basic details
             document.getElementById('detail-title').textContent = content.title;
             document.getElementById('detail-backdrop-img').src = content.backdrop || content.poster || '';
             document.getElementById('detail-poster-img').src = content.poster || '';
             
-            // Check if content is adult or premium-only
             const isAdult = content.isAdult || (content.category && content.category.includes('18+'));
             const isPremiumOnly = content.accessType === 'PREMIUM';
             
-            // Show adult badge if applicable
             const adultBadge = document.getElementById('detail-adult-badge');
             if (isAdult) {
                 adultBadge.style.display = 'inline';
@@ -3728,7 +4981,6 @@
                 adultBadge.style.display = 'none';
             }
             
-            // Check if user has access to this content
             const playButton = document.querySelector('.detail-actions .btn');
             if (isAdult && !isPremiumUser) {
                 playButton.innerHTML = '<i class="fas fa-lock"></i> Upgrade to Watch';
@@ -3747,7 +4999,6 @@
                 playButton.onclick = playCurrentContent;
             }
             
-            // Check if user has this in watchlist
             if (currentUser) {
                 const watchlistDoc = await db.collection('users').doc(currentUser.uid)
                     .collection('watchlist').doc(content.id).get();
@@ -3761,47 +5012,36 @@
                 }
             }
             
-            // 🔴 FIXED: Main Description - Real-time Update
             const mainDescSection = document.getElementById('main-description-section');
             const mainDescContent = document.getElementById('main-description-content');
             
             if (content.description_html && content.description_html.trim() !== '') {
-                // Display main description
                 mainDescSection.style.display = 'block';
                 
-                // Sanitize HTML - remove script and style tags
                 const tempDiv = document.createElement('div');
                 tempDiv.innerHTML = content.description_html;
                 
-                // Remove script and style tags
                 const scripts = tempDiv.querySelectorAll('script, style');
                 scripts.forEach(script => script.remove());
                 
-                // Set the sanitized HTML
                 mainDescContent.innerHTML = tempDiv.innerHTML;
             } else if (content.description && content.description.trim() !== '') {
-                // Fallback to plain text description
                 mainDescSection.style.display = 'block';
                 mainDescContent.innerHTML = `<p>${content.description}</p>`;
             } else {
-                // Hide main description section if empty
                 mainDescSection.style.display = 'none';
             }
             
-            // 🔴 **FIXED: ACTION LINKS SYSTEM - WORKING 100%**
             const actionLinksSection = document.getElementById('action-links-section');
             const actionLinksContainer = document.getElementById('action-links-container');
             
-            // Reset section
             actionLinksSection.style.display = 'none';
             actionLinksContainer.innerHTML = '';
             
-            // ✅ Check if content has category
             if (content.category) {
                 try {
                     console.log('Loading Action Links for category:', content.category);
                     
-                    // ✅ First, get the category document by name to find its ID
                     const categoriesSnapshot = await db.collection('categories')
                         .where('name', '==', content.category)
                         .limit(1)
@@ -3823,7 +5063,6 @@
                     const categoryId = categoryDoc.id;
                     console.log('Found category ID:', categoryId, 'for name:', content.category);
 
-                    // ✅ Now fetch action links using the category ID
                     const snapshot = await db
                         .collection('category_action_links')
                         .where('category_id', '==', categoryId)
@@ -3832,20 +5071,16 @@
 
                     console.log('Found Action Links:', snapshot.size);
 
-                    // ✅ Check if data exists
                     if (snapshot.size > 0) {
                         actionLinksSection.style.display = 'block';
                         
-                        // ✅ Create each Action Link
                         snapshot.forEach((doc) => {
                             const actionLink = doc.data();
                             console.log('Action Link data:', actionLink);
                             
-                            // Create action link item
                             const actionLinkItem = document.createElement('div');
                             actionLinkItem.className = 'action-link-item';
                             
-                            // Show short message (if exists)
                             if (actionLink.short_message && actionLink.short_message.trim() !== '') {
                                 const descDiv = document.createElement('div');
                                 descDiv.className = 'action-link-description';
@@ -3853,7 +5088,6 @@
                                 actionLinkItem.appendChild(descDiv);
                             }
                             
-                            // Create button (if exists)
                             if (actionLink.button_name && actionLink.button_name.trim() !== '' && 
                                 actionLink.url && actionLink.url.trim() !== '') {
                                 
@@ -3861,7 +5095,6 @@
                                 button.className = 'btn action-link-button';
                                 button.innerHTML = `<span>${actionLink.button_name}</span>`;
                                 
-                                // Add click counter if exists
                                 if (actionLink.click_count) {
                                     const counterSpan = document.createElement('span');
                                     counterSpan.className = 'click-counter';
@@ -3869,12 +5102,10 @@
                                     button.appendChild(counterSpan);
                                 }
                                 
-                                // Add click event
                                 button.addEventListener('click', function(e) {
                                     e.stopPropagation();
                                     window.open(actionLink.url, '_blank');
                                     
-                                    // Optional: Track clicks
                                     if (currentUser) {
                                         db.collection('category_action_links').doc(doc.id).update({
                                             click_count: firebase.firestore.FieldValue.increment(1)
@@ -3885,12 +5116,10 @@
                                 actionLinkItem.appendChild(button);
                             }
                             
-                            // Add to container
                             actionLinksContainer.appendChild(actionLinkItem);
                         });
                         
                     } else {
-                        // No Action Links found for this category
                         actionLinksContainer.innerHTML = `
                             <div class="no-action-links">
                                 <i class="fas fa-link"></i>
@@ -3911,7 +5140,6 @@
                     actionLinksSection.style.display = 'block';
                 }
             } else {
-                // No category assigned to this content
                 actionLinksContainer.innerHTML = `
                     <div class="no-action-links">
                         <i class="fas fa-info-circle"></i>
@@ -3989,7 +5217,6 @@
         function playCurrentContent() {
             if (!currentContent) return;
             
-            // Check adult content restriction
             const isAdult = currentContent.isAdult || currentContent.category.includes('18+');
             if (isAdult && window.ageVerificationEnabled && !isPremiumUser) {
                 if (!confirm('This content is restricted to viewers 18 years or older. Are you 18 or older?')) {
@@ -3997,7 +5224,6 @@
                 }
             }
             
-            // Check subscription for premium content
             const isPremiumOnly = currentContent.accessType === 'PREMIUM';
             
             if (isPremiumOnly && !isPremiumUser) {
@@ -4006,7 +5232,6 @@
                 return;
             }
             
-            // Choose appropriate stream URL
             let streamUrl = '';
             if (!isPremiumUser) {
                 streamUrl = currentContent.freeStreamUrl || currentContent.link || '';
@@ -4019,16 +5244,12 @@
                 return;
             }
             
-            // Set current playing type
             const contentType = currentContent.type || 'movie';
             currentPlayingType = contentType;
             
-            // Check if ads should be shown
             let shouldShowAd = false;
             
-            // Check ad system conditions
             if (!isPremiumUser && adsSettings.enabled && adsSettings.adUrl) {
-                // Check content type settings
                 if (contentType === 'movie' && adsSettings.showIn.movies) {
                     shouldShowAd = true;
                 } else if (contentType === 'series' && adsSettings.showIn.series) {
@@ -4052,10 +5273,8 @@
                 return;
             }
             
-            // Set current playing type
             currentPlayingType = 'livetv';
             
-            // Check if ads should be shown for Live TV
             let shouldShowAd = false;
             
             if (!isPremiumUser && adsSettings.enabled && adsSettings.adUrl && adsSettings.showIn.livetv) {
@@ -4074,13 +5293,11 @@
             const playerContainer = document.getElementById('video-player');
             
             if (url.includes('youtube.com') || url.includes('youtu.be')) {
-                // Handle YouTube URLs
                 const videoId = url.includes('youtube.com') ? 
                     url.split('v=')[1]?.split('&')[0] : 
                     url.split('youtu.be/')[1]?.split('?')[0];
                 player.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
             } else if (url.includes('.m3u8')) {
-                // Handle HLS streams
                 player.src = url;
                 if (Hls.isSupported()) {
                     const hls = new Hls();
@@ -4088,35 +5305,27 @@
                     hls.attachMedia(player);
                 }
             } else {
-                // Direct video URL
                 player.src = url;
             }
             
             playerContainer.style.display = 'flex';
             document.getElementById('back-btn').style.display = 'none';
 
-            // Render floating ads
             renderFloatingAds(currentPlayingType);
-
-            // Start interval ads if enabled
             startIntervalAds();
         }
 
         function injectAdScriptIntoSlot(slotElement, scriptCode) {
             if (!slotElement || !scriptCode) return;
 
-            // Clear previous content
             slotElement.innerHTML = "";
 
-            // Create a temporary container
             const temp = document.createElement('div');
             temp.innerHTML = scriptCode;
 
-            // First append non-script elements
             Array.from(temp.childNodes).forEach(node => {
                 if (node.tagName !== 'SCRIPT') {
                     const clone = node.cloneNode(true);
-                    // Fix for ad network CSS that adds position: fixed
                     if (clone.style) {
                         clone.style.position = 'static !important';
                         clone.style.margin = '0 auto !important';
@@ -4126,7 +5335,6 @@
                 }
             });
 
-            // Handle script elements separately
             const scripts = temp.querySelectorAll('script');
             scripts.forEach(oldScript => {
                 const newScript = document.createElement('script');
@@ -4152,7 +5360,6 @@
             if (topSlot) topSlot.innerHTML = "";
             if (bottomSlot) bottomSlot.innerHTML = "";
 
-            // premium/no-ads plan হলে কিছুই দেখাবো না
             if (isPremiumUser || !floatingAdsSettings.enabled) {
                 return;
             }
@@ -4172,7 +5379,7 @@
             }
         }
 
-        // FIXED: COMPLETE AD SYSTEM FUNCTIONS
+        // AD SYSTEM FUNCTIONS
         function showAdBeforePlay(streamUrl) {
             pendingStreamUrl = streamUrl;
             
@@ -4183,21 +5390,17 @@
             const skipBtn = document.getElementById('ad-skip-btn');
             const waitText = document.getElementById('ad-wait-text');
             
-            // Reset UI
             skipBtn.classList.remove('enabled');
             waitText.style.display = 'none';
             adIframe.style.display = 'block';
             
-            // Set ad URL from admin panel settings
             adIframe.src = adsSettings.adUrl;
             
-            // Set countdown from admin panel settings
             let countdown = adsSettings.preRollDurationSeconds;
             countdownElement.textContent = countdown;
             
             adOverlay.style.display = 'flex';
             
-            // Clear any existing countdown interval
             if (adCountdownInterval) {
                 clearInterval(adCountdownInterval);
             }
@@ -4206,7 +5409,6 @@
                 countdown--;
                 countdownElement.textContent = countdown;
                 
-                // Show skip button after skipAfterSeconds from admin panel
                 if (countdown <= (adsSettings.preRollDurationSeconds - adsSettings.skipAfterSeconds)) {
                     skipBtn.classList.add('enabled');
                 }
@@ -4217,7 +5419,6 @@
                 }
             }, 1000);
             
-            // Skip button functionality
             skipBtn.onclick = () => {
                 clearInterval(adCountdownInterval);
                 skipAdAndPlay();
@@ -4235,12 +5436,10 @@
         }
 
         function startIntervalAds() {
-            // Clear existing interval
             if (adInterval) {
                 clearInterval(adInterval);
             }
             
-            // Start interval ads if enabled
             if (!isPremiumUser && adsSettings.enabled && adsSettings.adIntervalMinutes > 0) {
                 adInterval = setInterval(() => {
                     showIntervalAd();
@@ -4254,7 +5453,6 @@
             if (playerContainer.style.display !== 'none') {
                 console.log('Showing interval ad');
                 
-                // Pause the video
                 const player = document.getElementById('video-player-iframe');
                 try {
                     player.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
@@ -4262,7 +5460,6 @@
                     console.log('Could not pause video');
                 }
                 
-                // Show interval ad
                 showAdBeforePlay(null);
             }
         }
@@ -4278,7 +5475,6 @@
 
             pendingStreamUrl = null;
 
-            // Clear floating ad slots
             const topSlot = document.getElementById('floating-ad-top');
             const bottomSlot = document.getElementById('floating-ad-bottom');
             if (topSlot) topSlot.innerHTML = "";
@@ -4295,7 +5491,6 @@
             const validityTimer = document.getElementById('validity-timer');
             const planExpiryInfo = document.getElementById('plan-expiry-info');
             
-            // Update plan badges
             if (planBadge) {
                 planBadge.textContent = userPlan.name;
                 planBadge.className = `id-card-subscription ${userPlan.name}`;
@@ -4306,7 +5501,6 @@
                 currentPlanBadge.className = `id-card-subscription ${userPlan.name}`;
             }
             
-            // Update member type
             if (memberType) {
                 if (isPremiumUser) {
                     memberType.textContent = 'PREMIUM MEMBER';
@@ -4315,7 +5509,6 @@
                 }
             }
             
-            // Update validity timer
             if (userPlan.expiresAt) {
                 startValidityCountdown(userPlan.expiresAt);
                 
@@ -4348,7 +5541,6 @@
                     document.getElementById('validity-timer').classList.add('blinking');
                     clearInterval(validityCountdownInterval);
                     
-                    // Reset user to free plan
                     userPlan = { name: 'FREE', expiresAt: null };
                     isPremiumUser = false;
                     updateProfilePlanDisplay();
@@ -4363,7 +5555,6 @@
                 document.getElementById('validity-timer').textContent = 
                     `${days} Days ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
                 
-                // Blink when less than 1 day remaining
                 if (days < 1) {
                     document.getElementById('validity-timer').classList.add('blinking');
                 } else {
@@ -4397,22 +5588,18 @@
             document.getElementById('checkout-title').innerHTML = `Purchase <span id="selected-plan-name">${plan.name}</span> Plan`;
             document.getElementById('payment-amount').innerHTML = `Amount: ৳<span id="selected-plan-price">${plan.rate}</span>`;
             
-            // Store plan ID in modal for later use
             const modal = document.getElementById('checkout-modal');
             modal.dataset.planId = plan.id;
             modal.dataset.planName = plan.name;
             
-            // Set payment QR if available
             if (plan.qrUrl) {
                 qrImage.src = plan.qrUrl;
                 qrImage.style.display = 'block';
             } else {
-                // Generate default QR code with plan name
                 qrImage.src = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=NHBOX-' + plan.name + '-' + plan.rate;
                 qrImage.style.display = 'block';
             }
             
-            // Reset form fields
             document.getElementById('transaction-id').value = '';
             document.getElementById('payment-number').value = '';
             
@@ -4441,7 +5628,6 @@
                 return;
             }
             
-            // Validate payment number (should be numeric)
             if (!/^\d+$/.test(paymentNumber)) {
                 alert('Payment number should contain only numbers');
                 return;
@@ -4454,7 +5640,6 @@
             }
             
             try {
-                // Record payment in planRequests collection (for admin review)
                 await db.collection('planRequests').add({
                     userId: currentUser.uid,
                     userName: currentUser.name,
@@ -4469,7 +5654,6 @@
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
-                // Show success message in Bengali
                 showToast('সফল হয়েছে!', 'আপনার প্ল্যান রিকোয়েস্টটি সফলভাবে গ্রহণ করা হয়েছে। অনুগ্রহ করে অপেক্ষা করুন, অ্যাডমিন এপ্রুভ করলে আপনার প্ল্যানটি চালু হয়ে যাবে।');
                 
                 closeModal('checkout-modal');
@@ -4499,7 +5683,6 @@
             couponResult.innerHTML = '<p style="color: var(--secondary-text-color);"><i class="fas fa-spinner fa-spin"></i> Validating coupon...</p>';
             
             try {
-                // Get coupon from Firestore
                 const couponDoc = await db.collection('coupons').doc(code).get();
                 
                 if (!couponDoc.exists) {
@@ -4510,15 +5693,11 @@
                 const coupon = couponDoc.data();
                 const now = new Date();
                 
-                // === MANDATORY VALIDATIONS ===
-                
-                // 1. Check if coupon is active
                 if (coupon.isActive === false) {
                     couponResult.innerHTML = '<p style="color: red;"><i class="fas fa-ban"></i> This coupon is inactive</p>';
                     return;
                 }
                 
-                // 2. Check expiry date
                 if (coupon.expiresAt) {
                     const expiryDate = coupon.expiresAt.toDate();
                     if (expiryDate < now) {
@@ -4527,7 +5706,6 @@
                     }
                 }
                 
-                // 3. Check usage limit
                 if (coupon.limit && coupon.limit > 0) {
                     const redeemedCount = coupon.redeemedBy ? Object.keys(coupon.redeemedBy).length : 0;
                     if (redeemedCount >= coupon.limit) {
@@ -4536,34 +5714,26 @@
                     }
                 }
                 
-                // 4. Check if user already redeemed this coupon
                 if (coupon.redeemedBy && coupon.redeemedBy[currentUser.uid]) {
                     couponResult.innerHTML = '<p style="color: red;"><i class="fas fa-user-check"></i> You have already redeemed this coupon</p>';
                     return;
                 }
                 
-                // === ALL VALIDATIONS PASSED - APPLY COUPON ===
-                
                 let newExpiresAt;
                 const extraDays = coupon.extraDays || 30;
                 
-                // Get current user data
                 const userDoc = await db.collection('users').doc(currentUser.uid).get();
                 const userData = userDoc.data();
                 
                 if (coupon.benefitType === 'plan') {
-                    // Apply new plan (like GOLD)
                     const planName = coupon.planName || 'GOLD';
                     
                     if (userData.subscription && userData.subscription.expiresAt > now.getTime()) {
-                        // User already has an active subscription - add days to current expiry
                         newExpiresAt = userData.subscription.expiresAt + (extraDays * 24 * 60 * 60 * 1000);
                     } else {
-                        // New subscription starting from now
                         newExpiresAt = now.getTime() + (extraDays * 24 * 60 * 60 * 1000);
                     }
                     
-                    // Update user subscription in Firestore
                     await db.collection('users').doc(currentUser.uid).update({
                         subscription: {
                             planName: planName,
@@ -4572,7 +5742,6 @@
                         }
                     });
                     
-                    // Update local user data
                     currentUser.subscription = {
                         planName: planName,
                         expiresAt: newExpiresAt
@@ -4584,7 +5753,6 @@
                     `;
                     
                 } else if (coupon.benefitType === 'days') {
-                    // Add extra days to existing plan
                     if (userData.subscription && userData.subscription.expiresAt) {
                         newExpiresAt = userData.subscription.expiresAt + (extraDays * 24 * 60 * 60 * 1000);
                     } else {
@@ -4612,19 +5780,13 @@
                     `;
                 }
                 
-                // Mark coupon as redeemed by this user
                 await db.collection('coupons').doc(code).update({
                     [`redeemedBy.${currentUser.uid}`]: true,
                     lastRedeemedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
-                // Refresh user plan display
                 checkUserPlan();
-                
-                // Show success toast
                 showToast('Coupon Applied', 'Your coupon has been successfully applied!');
-                
-                // Clear input field
                 document.getElementById('coupon-code').value = '';
                 
             } catch (error) {
@@ -4711,12 +5873,10 @@
             if (!currentUser) return;
             
             try {
-                // Show loading state
                 document.getElementById('notifications-loading-state').style.display = 'block';
                 document.getElementById('notifications-empty-state').style.display = 'none';
                 document.getElementById('notifications-success-state').style.display = 'none';
                 
-                // Load notifications from Firebase
                 const notificationsSnapshot = await db.collection('notifications')
                     .where('userId', '==', currentUser.uid)
                     .orderBy('createdAt', 'desc')
@@ -4760,7 +5920,6 @@
                 document.getElementById('notifications-success-state').style.display = 'block';
                 document.getElementById('notifications-success-state').innerHTML = html;
                 
-                // Update notification badge
                 updateNotificationBadge(unreadCount);
                 
             } catch (error) {
@@ -4801,7 +5960,6 @@
                     readAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
-                // Reload notifications
                 loadUserNotifications();
                 
             } catch (error) {
@@ -4902,14 +6060,12 @@
             const userPin = localStorage.getItem(`nh_box_app_pin_${currentUser.uid}`);
             
             if (userPin) {
-                // Disable app lock
                 if (confirm('Do you want to disable app lock?')) {
                     localStorage.removeItem(`nh_box_app_pin_${currentUser.uid}`);
                     updateAppLockText();
                     alert('App lock disabled');
                 }
             } else {
-                // Enable app lock
                 const newPin = prompt('Enter a 4-digit PIN for app lock:');
                 if (newPin && /^\d{4}$/.test(newPin)) {
                     localStorage.setItem(`nh_box_app_pin_${currentUser.uid}`, newPin);
@@ -4939,17 +6095,14 @@
             document.getElementById('profile-name').textContent = currentUser.name || 'User';
             document.getElementById('profile-id').textContent = `ID: ${currentUser.uid.substring(0, 8)}...`;
             
-            // Set member since
             if (currentUser.createdAt) {
                 const date = currentUser.createdAt.toDate ? currentUser.createdAt.toDate() : new Date();
                 document.getElementById('member-since').textContent = `Member Since: ${date.toLocaleDateString()}`;
             }
             
-            // Set profile icon
             const savedIcon = localStorage.getItem('nh_box_profile_icon') || 'fa-user';
             document.getElementById('profile-icon').innerHTML = `<i class="fas ${savedIcon}"></i>`;
             
-            // Update subscription info
             updateProfilePlanDisplay();
         }
 
@@ -4975,11 +6128,11 @@
 
         function selectProfileIcon(icon) {
             localStorage.setItem('nh_box_profile_icon', icon);
-            document.getElementById('profile-icon').innerHTML = `<i class="fas ${icon}"></i>`;
+            document.getElementById('profile-icon').innerHTML = `<i class="fas ${icon}></i>`;
             alert('Profile icon updated!');
         }
 
-        // === SEARCH FUNCTIONS ===
+        // === SEARCH FUNCTIONS (Legacy for other pages) ===
         function handleGlobalSearch(event) {
             const searchTerm = event.target.value.toLowerCase().trim();
             
@@ -4988,19 +6141,17 @@
             }
             
             if (event.key === 'Enter' || searchTerm.length >= 3) {
-                performGlobalSearch(searchTerm);
+                performGlobalSearchOld(searchTerm);
             }
         }
 
-        function performGlobalSearch(searchTerm) {
-            // Combine all content
+        function performGlobalSearchOld(searchTerm) {
             const allContent = [
                 ...allMovies.map(item => ({ ...item, type: 'movie' })),
                 ...allSeries.map(item => ({ ...item, type: 'series' })),
                 ...allLiveTV.map(item => ({ ...item, type: 'livetv' }))
             ];
             
-            // Filter content by search term
             const filteredContent = allContent.filter(item => {
                 return (
                     (item.title && item.title.toLowerCase().includes(searchTerm)) ||
@@ -5010,7 +6161,6 @@
                 );
             });
             
-            // ✅ FIXED: Category-wise order sorting - Sort movies by order field
             filteredContent.sort((a, b) => {
                 if (a.type === 'movie' && b.type === 'movie') {
                     const orderA = Number(a.order) || 999;
@@ -5021,7 +6171,6 @@
             });
             
             if (filteredContent.length === 0) {
-                // Show no results modal
                 document.getElementById('search-results-container').innerHTML = `
                     <div class="state-container">
                         <div class="state-icon">
@@ -5035,14 +6184,12 @@
                 return;
             }
             
-            // Group by type
             const movies = filteredContent.filter(item => item.type === 'movie');
             const series = filteredContent.filter(item => item.type === 'series');
             const liveTV = filteredContent.filter(item => item.type === 'livetv');
             
             let html = '';
             
-            // Movies section
             if (movies.length > 0) {
                 html += `<h3 style="margin: 20px 0 10px; color: var(--text-color);">Movies (${movies.length})</h3>
                         <div class="content-grid">`;
@@ -5059,7 +6206,6 @@
                 html += '</div>';
             }
             
-            // Series section
             if (series.length > 0) {
                 html += `<h3 style="margin: 20px 0 10px; color: var(--text-color);">Web Series (${series.length})</h3>
                         <div class="content-grid">`;
@@ -5076,7 +6222,6 @@
                 html += '</div>';
             }
             
-            // Live TV section
             if (liveTV.length > 0) {
                 html += `<h3 style="margin: 20px 0 10px; color: var(--text-color);">Live TV Channels (${liveTV.length})</h3>
                         <div class="livetv-grid">`;
@@ -5104,11 +6249,9 @@
 
         // === POLL FUNCTIONS ===
         function showPoll() {
-            // Check if user has already voted or dismissed
             const hasVoted = localStorage.getItem('nh_box_poll_voted');
             const pollDismissed = localStorage.getItem('nh_box_poll_dismissed');
             
-            // Only show poll on home page and subscription page
             const currentPage = document.querySelector('.page.active').id;
             const allowedPages = ['home-page', 'subscription-page'];
             
@@ -5116,7 +6259,6 @@
                 return;
             }
             
-            // Show poll after 2 seconds
             setTimeout(() => {
                 document.getElementById('poll-popup').classList.add('show');
                 pollShown = true;
@@ -5129,12 +6271,10 @@
         }
 
         function selectPollOption(element) {
-            // Remove selected class from all options
             document.querySelectorAll('.poll-option').forEach(opt => {
                 opt.classList.remove('selected');
             });
             
-            // Add selected class to clicked option
             element.classList.add('selected');
             selectedPollOption = element.getAttribute('data-value');
         }
@@ -5151,7 +6291,6 @@
             }
             
             try {
-                // Record vote in Firebase
                 await db.collection('poll_votes').add({
                     userId: currentUser.uid,
                     userName: currentUser.name,
@@ -5159,12 +6298,8 @@
                     votedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
-                // Mark as voted in localStorage
                 localStorage.setItem('nh_box_poll_voted', 'true');
-                
-                // Close poll
                 closePoll();
-                
                 alert('Thank you for your vote!');
                 
             } catch (error) {
@@ -5187,12 +6322,10 @@
                 return;
             }
             
-            // 🔴 If leaving detail page, remove content listener
             if (currentPage && currentPage.id === 'detail-page' && pageId !== 'detail-page') {
                 removeCurrentContentListener();
             }
             
-            // Update navigation
             navItems.forEach(item => {
                 item.classList.remove('active');
                 const spanText = item.querySelector('span').textContent.toLowerCase();
@@ -5202,15 +6335,12 @@
                 }
             });
             
-            // Update back button visibility
             document.getElementById('back-btn').style.display = pageId === 'home-page' ? 'none' : 'block';
             
-            // Set previous page
             if (currentPage && pageId !== 'home-page') {
                 previousPageId = currentPage.id;
             }
             
-            // Page transition
             if (currentPage) {
                 currentPage.classList.remove('active');
                 currentPage.classList.add('exit');
@@ -5219,13 +6349,15 @@
                     currentPage.classList.remove('exit');
                     targetPage.classList.add('active');
                     
-                    // Load page-specific content
                     switch(pageId) {
                         case 'home-page':
                             if (allMovies.length === 0) {
                                 loadContent();
                             }
                             showPoll();
+                            break;
+                        case 'search-page':
+                            loadRecentSearches();
                             break;
                         case 'movies-page':
                             loadMoviesCategories();
@@ -5317,7 +6449,6 @@
             
             toast.classList.add('show');
             
-            // Hide toast after 5 seconds
             setTimeout(() => {
                 toast.classList.remove('show');
             }, 5000);
@@ -5426,26 +6557,20 @@
             setupProfilePage();
             updateAppLockText();
             
-            // Setup search
             document.getElementById('search-input').addEventListener('input', (e) => {
                 if (e.target.value.length >= 3) {
-                    performGlobalSearch(e.target.value.toLowerCase());
+                    performGlobalSearchOld(e.target.value.toLowerCase());
                 }
             });
             
-            // Setup movies search
             document.getElementById('movies-search-input').addEventListener('input', (e) => {
                 const searchTerm = e.target.value.toLowerCase();
                 filterMoviesContent(searchTerm);
             });
             
-            // Setup disclaimer button
             document.getElementById('enter-btn').addEventListener('click', proceedToApp);
             
-            // Load app settings (including ads settings from admin panel)
             loadAppSettings();
-            
-            // Load content (including plans)
             loadContent();
         }
 
@@ -5465,13 +6590,11 @@
                 return;
             }
             
-            // Filter movies by search term
             const filteredMovies = allMovies.filter(movie => 
                 movie.title.toLowerCase().includes(searchTerm) || 
                 (movie.description && movie.description.toLowerCase().includes(searchTerm))
             );
             
-            // ✅ FIXED: Category-wise order sorting - Sort by order field
             filteredMovies.sort((a, b) => {
                 const orderA = Number(a.order) || 999;
                 const orderB = Number(b.order) || 999;
@@ -5493,7 +6616,6 @@
                 return;
             }
             
-            // Group by category
             const categories = {};
             filteredMovies.forEach(movie => {
                 if (movie.category) {
@@ -5507,7 +6629,6 @@
             let html = '<div class="movies-category-grid">';
             Object.keys(categories).forEach(category => {
                 const movies = categories[category];
-                // ✅ FIXED: Category-wise order sorting - Sort by order field inside category
                 movies.sort((a, b) => {
                     const orderA = Number(a.order) || 999;
                     const orderB = Number(b.order) || 999;
@@ -5554,13 +6675,12 @@
                 return;
             }
             
-            submitRequest(); // Use existing function
+            submitRequest();
             closeModal('request-modal');
         }
         
         let currentFilters = { searchTerm: '' };
         function filterContent() {
-            // This would filter content based on search term
             console.log('Filtering content with:', currentFilters.searchTerm);
         }
     </script>
