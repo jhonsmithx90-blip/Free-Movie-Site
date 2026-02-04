@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NH BOX - Stream Movies & Web Series</title>
     
     <!-- PWA Requirements -->
@@ -19,20 +19,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* ZOOM DISABLE GLOBAL STYLES - UPDATED */
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow-x: hidden;
-            overflow-y: auto;
-            touch-action: pan-y;
-            overscroll-behavior: none;
-        }
-        
-        * {
-            -webkit-tap-highlight-color: transparent;
-        }
-        
         /* --- START: THEME DEFINITIONS --- */
         :root, body[data-theme="filmzio-dark"] {
             --primary-color: #00aaff;
@@ -132,13 +118,13 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--body-font), 'Helvetica Neue', Helvetica, Arial, sans-serif; transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease; }
         
-        body { background-color: var(--bg-color); background-image: var(--body-bg-image); background-size: cover; background-attachment: fixed; color: var(--text-color); margin: 0; -webkit-font-smoothing: antialiased; }
+        body { background-color: var(--bg-color); background-image: var(--body-bg-image); background-size: cover; background-attachment: fixed; color: var(--text-color); margin: 0; overflow: hidden; -webkit-font-smoothing: antialiased; }
 
         #page-container {
             position: relative;
             max-width: 480px;
             margin: 0 auto;
-            min-height: 100vh;
+            height: 100vh;
             perspective: 1500px;
         }
 
@@ -148,7 +134,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            min-height: 100vh;
+            height: 100%;
             overflow-y: auto;
             overflow-x: hidden;
             backface-visibility: hidden;
@@ -158,7 +144,6 @@
             transform: rotateY(45deg) scale(0.9);
             transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1);
             padding-bottom: 70px;
-            -webkit-overflow-scrolling: touch;
         }
         body[data-theme="gradient-luxe"] .page { background-color: transparent; }
 
@@ -718,7 +703,6 @@
             padding: 20px 15px; 
             scrollbar-width: none; 
             gap: 12px; 
-            touch-action: pan-x;
         }
         
         .content-slider::-webkit-scrollbar { 
@@ -737,7 +721,7 @@
         } 
         
         .content-card:hover { 
-            transform: scale(1.02); 
+            transform: scale(1.05); 
         } 
         
         .content-card img { 
@@ -3583,30 +3567,6 @@
                     document.getElementById('login-page').style.display = 'flex';
                 }
             }, 2000);
-            
-            // Prevent zoom via gestures
-            document.addEventListener('gesturestart', function(e) {
-                e.preventDefault();
-            });
-            
-            document.addEventListener('touchmove', function(e) {
-                if (e.scale !== 1) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
-            
-            // Additional zoom prevention
-            document.addEventListener('wheel', function(e) {
-                if (e.ctrlKey) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
-            
-            document.addEventListener('keydown', function(e) {
-                if (e.ctrlKey && (e.key === '+' || e.key === '-' || e.key === '0')) {
-                    e.preventDefault();
-                }
-            });
         });
 
         // === AUTHENTICATION FUNCTIONS ===
@@ -5164,7 +5124,7 @@
                             <div class="no-action-links">
                                 <i class="fas fa-link"></i>
                                 <p>No action links available for this category</p>
-                        </div>
+                            </div>
                         `;
                         actionLinksSection.style.display = 'block';
                     }
@@ -6168,7 +6128,7 @@
 
         function selectProfileIcon(icon) {
             localStorage.setItem('nh_box_profile_icon', icon);
-            document.getElementById('profile-icon').innerHTML = `<i class="fas ${icon}"></i>`;
+            document.getElementById('profile-icon').innerHTML = `<i class="fas ${icon}></i>`;
             alert('Profile icon updated!');
         }
 
