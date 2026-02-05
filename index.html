@@ -1871,7 +1871,7 @@
             font-size: 24px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             cursor: pointer;
-            z-index: 1000;
+            z-index: 999; /* ✅ FIXED: Reduced from 1000 to 999 */
             animation: fab-pulse 2s infinite;
             transition: transform 0.3s;
         }
@@ -2599,6 +2599,8 @@
             gap: 10px;
             margin-top: 15px;
             flex-wrap: wrap;
+            position: relative;
+            z-index: 1000; /* ✅ FIXED: Added z-index */
         }
         
         .detail-action-btn {
@@ -2615,6 +2617,8 @@
             justify-content: center;
             gap: 8px;
             transition: all 0.3s;
+            position: relative;
+            pointer-events: auto !important; /* ✅ FIXED: Ensure clickable */
         }
         
         .detail-action-btn.download {
@@ -2625,6 +2629,8 @@
         .detail-action-btn.like {
             background: linear-gradient(135deg, #ff2fb3, #ff6a00);
             color: white;
+            z-index: 1001 !important; /* ✅ FIXED: Higher z-index */
+            position: relative;
         }
         
         .detail-action-btn:hover {
@@ -2654,6 +2660,41 @@
         
         .stat-item i {
             color: var(--primary-color);
+        }
+        
+        /* ✅ FIXED: LIKE BUTTON CLICK ISSUE FIXES */
+        /* Make sure like button is always clickable */
+        #like-btn {
+            z-index: 1001 !important;
+            position: relative !important;
+            pointer-events: auto !important;
+        }
+        
+        /* Ensure detail page content is above floating icons */
+        .detail-content {
+            position: relative;
+            z-index: 100;
+        }
+        
+        /* Hide complaint fab on detail page */
+        #detail-page ~ #complaint-fab {
+            display: none !important;
+        }
+        
+        /* Make sure video player controls don't interfere */
+        .video-controls {
+            z-index: 1202;
+        }
+        
+        /* Ensure floating ads don't interfere */
+        .floating-ad-slot {
+            z-index: 1;
+        }
+        
+        /* Make detail page content clickable */
+        .detail-info {
+            position: relative;
+            z-index: 50;
         }
     </style>
 </head>
@@ -5012,6 +5053,9 @@
             currentContent = content;
             navigateTo('detail-page');
             
+            // ✅ FIXED: Hide complaint fab on detail page
+            document.getElementById('complaint-fab').style.display = 'none';
+            
             updateDetailUI(content);
             setupContentListener(contentId, type);
         }
@@ -5099,7 +5143,8 @@
             const downloadBtn = document.getElementById('download-btn');
             if (content.downloadVideo) {
                 downloadBtn.disabled = false;
-                downloadBtn.onclick = () => {
+                downloadBtn.onclick = function(e) {
+                    e.stopPropagation();
                     window.open(content.downloadVideo, '_blank');
                 };
             } else {
@@ -5107,6 +5152,7 @@
                 downloadBtn.onclick = null;
             }
             
+            // ✅ FIXED: LIKE BUTTON CLICK FIX
             // Set up like button
             const likeBtn = document.getElementById('like-btn');
             if (currentUser) {
@@ -5118,17 +5164,43 @@
                 if (likeSnap.exists()) {
                     likeBtn.disabled = true;
                     likeBtn.innerHTML = '<i class="fas fa-heart"></i> Liked (<span id="like-count">' + likesCount + '</span>)';
+                    likeBtn.style.opacity = '0.8';
+                    likeBtn.style.cursor = 'default';
+                    likeBtn.onclick = null; // Remove click handler
                 } else {
                     likeBtn.disabled = false;
-                    likeBtn.onclick = () => handleLike(content.id);
+                    likeBtn.style.opacity = '1';
+                    likeBtn.style.cursor = 'pointer';
+                    
+                    // ✅ FIXED: Add proper click handler with event stopPropagation
+                    likeBtn.onclick = function(e) {
+                        e.stopPropagation(); // Prevent event bubbling
+                        e.preventDefault(); // Prevent default behavior
+                        console.log('Like button clicked - Test');
+                        
+                        // Add confirmation for testing
+                        if (confirm('Do you want to like this video?')) {
+                            handleLike(content.id);
+                        }
+                    };
+                    
                     likeBtn.innerHTML = '<i class="fas fa-heart"></i> Like (<span id="like-count">' + likesCount + '</span>)';
                 }
             } else {
                 likeBtn.disabled = false;
-                likeBtn.onclick = () => {
+                likeBtn.style.opacity = '1';
+                likeBtn.style.cursor = 'pointer';
+                likeBtn.onclick = function(e) {
+                    e.stopPropagation();
+                    e.preventDefault();
                     alert('Please login to like this content');
                 };
             }
+            
+            // Ensure like button is clickable
+            likeBtn.style.pointerEvents = 'auto';
+            likeBtn.style.position = 'relative';
+            likeBtn.style.zIndex = '1001';
             
             if (currentUser) {
                 const watchlistDoc = await db.collection('users').doc(currentUser.uid)
@@ -5314,6 +5386,9 @@
                 // Update UI
                 const likeBtn = document.getElementById('like-btn');
                 likeBtn.disabled = true;
+                likeBtn.style.opacity = '0.8';
+                likeBtn.style.cursor = 'default';
+                likeBtn.onclick = null; // Remove click handler
                 
                 // Get updated like count
                 const movieSnap = await movieRef.get();
@@ -5675,6 +5750,14 @@
             const bottomSlot = document.getElementById('floating-ad-bottom');
             if (topSlot) topSlot.innerHTML = "";
             if (bottomSlot) bottomSlot.innerHTML = "";
+            
+            // ✅ FIXED: Show complaint fab again when closing video player
+            setTimeout(() => {
+                const currentPage = document.querySelector('.page.active');
+                if (currentPage && currentPage.id !== 'detail-page') {
+                    document.getElementById('complaint-fab').style.display = 'flex';
+                }
+            }, 300);
         }
 
         // === SUBSCRIPTION FUNCTIONS ===
@@ -6300,6 +6383,9 @@
             document.getElementById('profile-icon').innerHTML = `<i class="fas ${savedIcon}"></i>`;
             
             updateProfilePlanDisplay();
+            
+            // ✅ FIXED: Show complaint fab on profile page
+            document.getElementById('complaint-fab').style.display = 'flex';
         }
 
         function openIconSelector() {
@@ -6324,7 +6410,7 @@
 
         function selectProfileIcon(icon) {
             localStorage.setItem('nh_box_profile_icon', icon);
-            document.getElementById('profile-icon').innerHTML = `<i class="fas ${icon}></i>`;
+            document.getElementById('profile-icon').innerHTML = `<i class="fas ${icon}"></i>`;
             alert('Profile icon updated!');
         }
 
@@ -6520,6 +6606,11 @@
             
             if (currentPage && currentPage.id === 'detail-page' && pageId !== 'detail-page') {
                 removeCurrentContentListener();
+                
+                // ✅ FIXED: Show complaint fab when leaving detail page
+                if (pageId !== 'detail-page') {
+                    document.getElementById('complaint-fab').style.display = 'flex';
+                }
             }
             
             navItems.forEach(item => {
@@ -6544,6 +6635,13 @@
                 setTimeout(() => {
                     currentPage.classList.remove('exit');
                     targetPage.classList.add('active');
+                    
+                    // ✅ FIXED: Hide complaint fab on detail page, show on others
+                    if (pageId === 'detail-page') {
+                        document.getElementById('complaint-fab').style.display = 'none';
+                    } else {
+                        document.getElementById('complaint-fab').style.display = 'flex';
+                    }
                     
                     switch(pageId) {
                         case 'home-page':
@@ -6588,6 +6686,14 @@
                 }, 300);
             } else {
                 targetPage.classList.add('active');
+                
+                // ✅ FIXED: Hide complaint fab on detail page
+                if (pageId === 'detail-page') {
+                    document.getElementById('complaint-fab').style.display = 'none';
+                } else {
+                    document.getElementById('complaint-fab').style.display = 'flex';
+                }
+                
                 isNavigating = false;
             }
         }
@@ -6879,6 +6985,27 @@
         function filterContent() {
             console.log('Filtering content with:', currentFilters.searchTerm);
         }
+        
+        // ✅ FIXED: Like Button Click Test Function
+        function testLikeButtonClick() {
+            const likeBtn = document.getElementById('like-btn');
+            if (likeBtn) {
+                console.log('Like button found:', likeBtn);
+                likeBtn.addEventListener('click', function(e) {
+                    console.log('Like button clicked directly');
+                    e.stopPropagation();
+                    e.preventDefault();
+                    alert('Like button click test successful!');
+                });
+            } else {
+                console.log('Like button not found');
+            }
+        }
+        
+        // Call test function on detail page load
+        setTimeout(() => {
+            testLikeButtonClick();
+        }, 1000);
     </script>
 </body>
 </html>
