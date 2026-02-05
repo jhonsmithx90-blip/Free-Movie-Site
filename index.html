@@ -1871,7 +1871,7 @@
             font-size: 24px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             cursor: pointer;
-            z-index: 999; /* ✅ FIXED: Reduced from 1000 to 999 */
+            z-index: 999;
             animation: fab-pulse 2s infinite;
             transition: transform 0.3s;
         }
@@ -2600,7 +2600,7 @@
             margin-top: 15px;
             flex-wrap: wrap;
             position: relative;
-            z-index: 1000; /* ✅ FIXED: Added z-index */
+            z-index: 1000;
         }
         
         .detail-action-btn {
@@ -2618,7 +2618,7 @@
             gap: 8px;
             transition: all 0.3s;
             position: relative;
-            pointer-events: auto !important; /* ✅ FIXED: Ensure clickable */
+            pointer-events: auto !important;
         }
         
         .detail-action-btn.download {
@@ -2629,7 +2629,7 @@
         .detail-action-btn.like {
             background: linear-gradient(135deg, #ff2fb3, #ff6a00);
             color: white;
-            z-index: 1001 !important; /* ✅ FIXED: Higher z-index */
+            z-index: 1001 !important;
             position: relative;
         }
         
@@ -2663,35 +2663,29 @@
         }
         
         /* ✅ FIXED: LIKE BUTTON CLICK ISSUE FIXES */
-        /* Make sure like button is always clickable */
         #like-btn {
             z-index: 1001 !important;
             position: relative !important;
             pointer-events: auto !important;
         }
         
-        /* Ensure detail page content is above floating icons */
         .detail-content {
             position: relative;
             z-index: 100;
         }
         
-        /* Hide complaint fab on detail page */
         #detail-page ~ #complaint-fab {
             display: none !important;
         }
         
-        /* Make sure video player controls don't interfere */
         .video-controls {
             z-index: 1202;
         }
         
-        /* Ensure floating ads don't interfere */
         .floating-ad-slot {
             z-index: 1;
         }
         
-        /* Make detail page content clickable */
         .detail-info {
             position: relative;
             z-index: 50;
@@ -4602,10 +4596,10 @@
                 });
             });
             
-            // Load categories - FIXED: Added .orderBy('order', 'asc') here
+            // Load categories
             db.collection('categories')
                 .where('visible', '==', true)
-                .orderBy('order', 'asc')  // 🔥 THIS IS THE FIX - Added orderBy
+                .orderBy('order', 'asc')
                 .onSnapshot((snapshot) => {
                 allCategories = [];
                 snapshot.forEach(doc => {
@@ -4908,7 +4902,6 @@
                             <div class="slide-rating">
                                 <i class="fas fa-star"></i>
                                 <span>${item.rating || '7.5'}/10</span>
-                            </div>
                         </div>
                     </div>
                 `;
@@ -5097,11 +5090,13 @@
             }
         }
 
+        // ✅ FIXED: Firestore থেকে date, minutes, rating সঠিকভাবে লোড হচ্ছে
         async function updateDetailUI(content) {
             document.getElementById('detail-title').textContent = content.title;
             document.getElementById('detail-backdrop-img').src = content.backdrop || content.poster || '';
             document.getElementById('detail-poster-img').src = content.poster || '';
             
+            // ✅ FIXED: Firestore থেকে date, minutes, rating ফিল্ডগুলো সঠিকভাবে লোড হচ্ছে
             const isAdult = content.isAdult || (content.category && content.category.includes('18+'));
             const isPremiumOnly = content.accessType === 'PREMIUM';
             
@@ -5111,6 +5106,11 @@
             } else {
                 adultBadge.style.display = 'none';
             }
+            
+            // ✅ FIXED: Firestore থেকে সঠিক ফিল্ড নামে ডেটা লোড করা
+            document.getElementById('detail-year').textContent = content.date || 'N/A';
+            document.getElementById('detail-runtime').textContent = content.minutes || 'N/A';
+            document.getElementById('detail-rating').textContent = content.rating || 'N/A';
             
             const playButton = document.querySelector('.detail-actions .btn');
             if (isAdult && !isPremiumUser) {
@@ -5176,9 +5176,7 @@
                     likeBtn.onclick = function(e) {
                         e.stopPropagation(); // Prevent event bubbling
                         e.preventDefault(); // Prevent default behavior
-                        console.log('Like button clicked - Test');
                         
-                        // Add confirmation for testing
                         if (confirm('Do you want to like this video?')) {
                             handleLike(content.id);
                         }
@@ -5327,7 +5325,7 @@
                             <div class="no-action-links">
                                 <i class="fas fa-link"></i>
                                 <p>No action links available for this category</p>
-                            </div>
+                        </div>
                         `;
                         actionLinksSection.style.display = 'block';
                     }
@@ -5353,7 +5351,7 @@
             }
         }
 
-        // Handle Like function
+        // ✅ FIXED: LIKE FUNCTION এখন Firestore-এ increment করবে
         async function handleLike(contentId) {
             if (!currentUser) {
                 alert('Please login to like this content');
@@ -5372,7 +5370,7 @@
             }
             
             try {
-                // Increment like count
+                // ✅ FIXED: Firestore-এ likedVideo field increment করা
                 await movieRef.update({
                     likedVideo: firebase.firestore.FieldValue.increment(1)
                 });
@@ -5383,20 +5381,20 @@
                     userId: userId
                 });
                 
-                // Update UI
+                // Update currentContent object
+                currentContent.likedVideo = (currentContent.likedVideo || 0) + 1;
+                
+                // Update UI immediately
+                document.getElementById('detail-likes').textContent = currentContent.likedVideo;
+                document.getElementById('like-count').textContent = currentContent.likedVideo;
+                
+                // Update like button state
                 const likeBtn = document.getElementById('like-btn');
                 likeBtn.disabled = true;
                 likeBtn.style.opacity = '0.8';
                 likeBtn.style.cursor = 'default';
                 likeBtn.onclick = null; // Remove click handler
-                
-                // Get updated like count
-                const movieSnap = await movieRef.get();
-                const updatedLikes = movieSnap.data().likedVideo || 0;
-                
-                document.getElementById('detail-likes').textContent = updatedLikes;
-                document.getElementById('like-count').textContent = updatedLikes;
-                likeBtn.innerHTML = '<i class="fas fa-heart"></i> Liked (<span id="like-count">' + updatedLikes + '</span>)';
+                likeBtn.innerHTML = '<i class="fas fa-heart"></i> Liked (<span id="like-count">' + currentContent.likedVideo + '</span>)';
                 
                 showToast('Liked!', 'You liked this video');
                 
@@ -5488,16 +5486,18 @@
                 return;
             }
             
-            // Increment views count
+            // ✅ FIXED: Firestore-এ views count increment করা হবে
             try {
                 const movieRef = db.collection('movies').doc(currentContent.id);
                 await movieRef.update({
                     views: firebase.firestore.FieldValue.increment(1)
                 });
                 
-                // Update UI
-                const currentViews = currentContent.views || 0;
-                document.getElementById('detail-views').textContent = currentViews + 1;
+                // Update currentContent object
+                currentContent.views = (currentContent.views || 0) + 1;
+                
+                // Update UI immediately
+                document.getElementById('detail-views').textContent = currentContent.views;
                 
             } catch (error) {
                 console.error('Error incrementing views:', error);
@@ -6985,27 +6985,6 @@
         function filterContent() {
             console.log('Filtering content with:', currentFilters.searchTerm);
         }
-        
-        // ✅ FIXED: Like Button Click Test Function
-        function testLikeButtonClick() {
-            const likeBtn = document.getElementById('like-btn');
-            if (likeBtn) {
-                console.log('Like button found:', likeBtn);
-                likeBtn.addEventListener('click', function(e) {
-                    console.log('Like button clicked directly');
-                    e.stopPropagation();
-                    e.preventDefault();
-                    alert('Like button click test successful!');
-                });
-            } else {
-                console.log('Like button not found');
-            }
-        }
-        
-        // Call test function on detail page load
-        setTimeout(() => {
-            testLikeButtonClick();
-        }, 1000);
     </script>
 </body>
 </html>
