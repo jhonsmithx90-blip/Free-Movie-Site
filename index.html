@@ -2690,6 +2690,36 @@
             position: relative;
             z-index: 50;
         }
+
+        /* =========================== */
+        /* NEW: FLOATING CIRCLE AD STYLES */
+        /* =========================== */
+        #floating-circle-ad {
+            position: fixed;
+            bottom: 155px;
+            right: 18px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            z-index: 9999;
+            cursor: pointer;
+            display: none;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        #floating-circle-ad:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        #floating-circle-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body data-theme="filmzio-dark">
@@ -2932,6 +2962,11 @@
 
             <!-- Bottom Floating Ad Slot -->
             <div id="floating-ad-bottom" class="floating-ad-slot"></div>
+        </div>
+
+        <!-- FLOATING CIRCLE AD -->
+        <div id="floating-circle-ad">
+            <img id="floating-circle-img" src="" alt="">
         </div>
 
         <button class="back-btn" id="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i></button>
@@ -3666,6 +3701,11 @@
             }
         };
         
+        // Floating Circle Ad variables
+        let floatingCircleAdEnabled = false;
+        let floatingCircleAdImage = '';
+        let floatingCircleAdLink = '';
+        
         let currentPlayingType = 'movie';
         let isPremiumUser = false;
         let userPlan = { name: 'FREE', expiresAt: null };
@@ -4126,6 +4166,20 @@
                         console.log('Floating ads settings loaded:', floatingAdsSettings);
                     }
                     
+                    // Load Floating Circle Ad Settings
+                    floatingCircleAdEnabled = appSettings.floatingAdsAllPageEnabled || false;
+                    floatingCircleAdImage = appSettings.floatingAdsAllPageImage || '';
+                    floatingCircleAdLink = appSettings.floatingAdsAllPage || '';
+                    
+                    console.log('Floating Circle Ad settings loaded:', {
+                        enabled: floatingCircleAdEnabled,
+                        image: floatingCircleAdImage,
+                        link: floatingCircleAdLink
+                    });
+                    
+                    // Update floating circle ad
+                    updateFloatingCircleAd();
+                    
                     if (appSettings.logoText) {
                         const logos = document.querySelectorAll('.logo');
                         logos.forEach(logo => {
@@ -4134,6 +4188,60 @@
                     }
                 }
             });
+        }
+        
+        // === FLOATING CIRCLE AD FUNCTIONS ===
+        function updateFloatingCircleAd() {
+            const floatingCircleAd = document.getElementById('floating-circle-ad');
+            const floatingCircleImg = document.getElementById('floating-circle-img');
+            
+            if (!floatingCircleAd || !floatingCircleImg) return;
+            
+            if (floatingCircleAdEnabled && floatingCircleAdImage && floatingCircleAdLink) {
+                floatingCircleImg.src = floatingCircleAdImage;
+                floatingCircleAd.style.display = 'block';
+                
+                // Set click event
+                floatingCircleAd.onclick = function() {
+                    window.open(floatingCircleAdLink, '_blank');
+                };
+                
+                console.log('Floating Circle Ad enabled and displayed');
+            } else {
+                floatingCircleAd.style.display = 'none';
+                console.log('Floating Circle Ad disabled or missing data');
+            }
+            
+            // Update visibility based on current page
+            updateFloatingAdVisibility();
+        }
+        
+        function updateFloatingAdVisibility() {
+            const floatingCircleAd = document.getElementById('floating-circle-ad');
+            const complaintFab = document.getElementById('complaint-fab');
+            
+            if (!floatingCircleAd) return;
+            
+            const currentPage = document.querySelector('.page.active');
+            const isDetailPage = currentPage && currentPage.id === 'detail-page';
+            const isVideoPlayerOpen = document.getElementById('video-player').style.display === 'flex';
+            
+            // Floating Circle Ad visibility logic
+            if (floatingCircleAdEnabled && floatingCircleAdImage && floatingCircleAdLink && 
+                !isDetailPage && !isVideoPlayerOpen) {
+                floatingCircleAd.style.display = 'block';
+            } else {
+                floatingCircleAd.style.display = 'none';
+            }
+            
+            // Complaint Fab visibility logic (keep existing)
+            if (complaintFab) {
+                if (isDetailPage || isVideoPlayerOpen) {
+                    complaintFab.style.display = 'none';
+                } else {
+                    complaintFab.style.display = 'flex';
+                }
+            }
         }
 
         // === NEW: SEARCH SYSTEM FUNCTIONS ===
@@ -5584,6 +5692,9 @@
 
             renderFloatingAds(currentPlayingType);
             startIntervalAds();
+            
+            // Update floating ad visibility
+            updateFloatingAdVisibility();
         }
 
         function injectAdScriptIntoSlot(slotElement, scriptCode) {
@@ -5751,13 +5862,8 @@
             if (topSlot) topSlot.innerHTML = "";
             if (bottomSlot) bottomSlot.innerHTML = "";
             
-            // ✅ FIXED: Show complaint fab again when closing video player
-            setTimeout(() => {
-                const currentPage = document.querySelector('.page.active');
-                if (currentPage && currentPage.id !== 'detail-page') {
-                    document.getElementById('complaint-fab').style.display = 'flex';
-                }
-            }, 300);
+            // ✅ FIXED: Show complaint fab and floating ad again when closing video player
+            updateFloatingAdVisibility();
         }
 
         // === SUBSCRIPTION FUNCTIONS ===
@@ -6636,12 +6742,8 @@
                     currentPage.classList.remove('exit');
                     targetPage.classList.add('active');
                     
-                    // ✅ FIXED: Hide complaint fab on detail page, show on others
-                    if (pageId === 'detail-page') {
-                        document.getElementById('complaint-fab').style.display = 'none';
-                    } else {
-                        document.getElementById('complaint-fab').style.display = 'flex';
-                    }
+                    // Update floating ad visibility based on new page
+                    updateFloatingAdVisibility();
                     
                     switch(pageId) {
                         case 'home-page':
@@ -6687,12 +6789,8 @@
             } else {
                 targetPage.classList.add('active');
                 
-                // ✅ FIXED: Hide complaint fab on detail page
-                if (pageId === 'detail-page') {
-                    document.getElementById('complaint-fab').style.display = 'none';
-                } else {
-                    document.getElementById('complaint-fab').style.display = 'flex';
-                }
+                // Update floating ad visibility
+                updateFloatingAdVisibility();
                 
                 isNavigating = false;
             }
