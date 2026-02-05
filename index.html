@@ -2592,6 +2592,69 @@
         .clear-history-btn:hover {
             background-color: rgba(229, 9, 20, 0.2);
         }
+
+        /* NEW: Detail page action buttons */
+        .detail-action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .detail-action-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .detail-action-btn.download {
+            background: linear-gradient(135deg, #ff00cc, #ff6a00);
+            color: white;
+        }
+        
+        .detail-action-btn.like {
+            background: linear-gradient(135deg, #ff2fb3, #ff6a00);
+            color: white;
+        }
+        
+        .detail-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .detail-action-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .detail-stats {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            color: var(--secondary-text-color);
+            font-size: 14px;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .stat-item i {
+            color: var(--primary-color);
+        }
     </style>
 </head>
 <body data-theme="filmzio-dark">
@@ -3131,12 +3194,36 @@
                             <span><i class="fas fa-star"></i> <span id="detail-rating">7.5/10</span></span>
                             <span id="detail-adult-badge" style="color: red; display: none;"><i class="fas fa-18"></i> 18+</span>
                         </div>
+                        
+                        <!-- Stats Section -->
+                        <div class="detail-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-eye"></i>
+                                <span id="detail-views">0</span> views
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-heart"></i>
+                                <span id="detail-likes">0</span> likes
+                            </div>
+                        </div>
+                        
+                        <!-- Main Action Buttons -->
                         <div class="detail-actions">
                             <button class="btn" onclick="playCurrentContent()">
                                 <i class="fas fa-play"></i> Play Now
                             </button>
                             <button class="btn btn-secondary" id="watchlist-btn" onclick="toggleWatchlist()">
                                 <i class="far fa-bookmark"></i> Watchlist
+                            </button>
+                        </div>
+                        
+                        <!-- Additional Action Buttons -->
+                        <div class="detail-action-buttons">
+                            <button class="detail-action-btn download" id="download-btn">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                            <button class="detail-action-btn like" id="like-btn">
+                                <i class="fas fa-heart"></i> Like (<span id="like-count">0</span>)
                             </button>
                         </div>
                     </div>
@@ -4999,6 +5086,50 @@
                 playButton.onclick = playCurrentContent;
             }
             
+            // Update views count
+            const viewsCount = content.views || 0;
+            document.getElementById('detail-views').textContent = viewsCount;
+            
+            // Update likes count
+            const likesCount = content.likedVideo || 0;
+            document.getElementById('detail-likes').textContent = likesCount;
+            document.getElementById('like-count').textContent = likesCount;
+            
+            // Set up download button
+            const downloadBtn = document.getElementById('download-btn');
+            if (content.downloadVideo) {
+                downloadBtn.disabled = false;
+                downloadBtn.onclick = () => {
+                    window.open(content.downloadVideo, '_blank');
+                };
+            } else {
+                downloadBtn.disabled = true;
+                downloadBtn.onclick = null;
+            }
+            
+            // Set up like button
+            const likeBtn = document.getElementById('like-btn');
+            if (currentUser) {
+                // Check if user has already liked this content
+                const likeRef = db.collection('movies').doc(content.id)
+                    .collection('likes').doc(currentUser.uid);
+                const likeSnap = await likeRef.get();
+                
+                if (likeSnap.exists()) {
+                    likeBtn.disabled = true;
+                    likeBtn.innerHTML = '<i class="fas fa-heart"></i> Liked (<span id="like-count">' + likesCount + '</span>)';
+                } else {
+                    likeBtn.disabled = false;
+                    likeBtn.onclick = () => handleLike(content.id);
+                    likeBtn.innerHTML = '<i class="fas fa-heart"></i> Like (<span id="like-count">' + likesCount + '</span>)';
+                }
+            } else {
+                likeBtn.disabled = false;
+                likeBtn.onclick = () => {
+                    alert('Please login to like this content');
+                };
+            }
+            
             if (currentUser) {
                 const watchlistDoc = await db.collection('users').doc(currentUser.uid)
                     .collection('watchlist').doc(content.id).get();
@@ -5114,9 +5245,9 @@
                                 });
                                 
                                 actionLinkItem.appendChild(button);
+                                
+                                actionLinksContainer.appendChild(actionLinkItem);
                             }
-                            
-                            actionLinksContainer.appendChild(actionLinkItem);
                         });
                         
                     } else {
@@ -5147,6 +5278,56 @@
                     </div>
                 `;
                 actionLinksSection.style.display = 'block';
+            }
+        }
+
+        // Handle Like function
+        async function handleLike(contentId) {
+            if (!currentUser) {
+                alert('Please login to like this content');
+                return;
+            }
+            
+            const userId = currentUser.uid;
+            const movieRef = db.collection('movies').doc(contentId);
+            const likeRef = movieRef.collection('likes').doc(userId);
+            
+            // Check if user already liked
+            const likeSnap = await likeRef.get();
+            if (likeSnap.exists()) {
+                alert('You already liked this video');
+                return;
+            }
+            
+            try {
+                // Increment like count
+                await movieRef.update({
+                    likedVideo: firebase.firestore.FieldValue.increment(1)
+                });
+                
+                // Record user like
+                await likeRef.set({
+                    likedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    userId: userId
+                });
+                
+                // Update UI
+                const likeBtn = document.getElementById('like-btn');
+                likeBtn.disabled = true;
+                
+                // Get updated like count
+                const movieSnap = await movieRef.get();
+                const updatedLikes = movieSnap.data().likedVideo || 0;
+                
+                document.getElementById('detail-likes').textContent = updatedLikes;
+                document.getElementById('like-count').textContent = updatedLikes;
+                likeBtn.innerHTML = '<i class="fas fa-heart"></i> Liked (<span id="like-count">' + updatedLikes + '</span>)';
+                
+                showToast('Liked!', 'You liked this video');
+                
+            } catch (error) {
+                console.error('Error liking video:', error);
+                alert('Failed to like video. Please try again.');
             }
         }
 
@@ -5214,7 +5395,7 @@
         }
 
         // === PLAYBACK FUNCTIONS ===
-        function playCurrentContent() {
+        async function playCurrentContent() {
             if (!currentContent) return;
             
             const isAdult = currentContent.isAdult || currentContent.category.includes('18+');
@@ -5230,6 +5411,21 @@
                 alert('This content requires a premium subscription. Please upgrade your plan.');
                 navigateTo('subscription-page');
                 return;
+            }
+            
+            // Increment views count
+            try {
+                const movieRef = db.collection('movies').doc(currentContent.id);
+                await movieRef.update({
+                    views: firebase.firestore.FieldValue.increment(1)
+                });
+                
+                // Update UI
+                const currentViews = currentContent.views || 0;
+                document.getElementById('detail-views').textContent = currentViews + 1;
+                
+            } catch (error) {
+                console.error('Error incrementing views:', error);
             }
             
             let streamUrl = '';
